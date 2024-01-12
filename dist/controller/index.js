@@ -18,4 +18,5 @@ __exportStar(require("./user.controller"), exports);
 __exportStar(require("./auth.controller"), exports);
 __exportStar(require("./leave.controller"), exports);
 __exportStar(require("./department.controller"), exports);
+__exportStar(require("./relieving_officer_controller"), exports);
 //# sourceMappingURL=index.js.map

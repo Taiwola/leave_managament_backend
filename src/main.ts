@@ -50,6 +50,7 @@ import {userRoute} from './routes/user.routes';
 import {authRoute} from "./routes/auth.routes";
 import {leaveRouter} from "./routes/leave.routes";
 import {deptRoute} from "./routes/department.routes";
+import {relieveRoute} from "./routes/relieve_officer_routes"
 import path from "path";
 
 app.get('/home', (req, res) => {
@@ -98,6 +99,7 @@ app.use('/api/', userRoute);
 app.use('/api/', authRoute);
 app.use('/api/', leaveRouter);
 app.use("/api/", deptRoute);
+app.use('/api/', relieveRoute);
 
 
 

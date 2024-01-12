@@ -70,6 +70,7 @@ var user_routes_1 = require("./routes/user.routes");
 var auth_routes_1 = require("./routes/auth.routes");
 var leave_routes_1 = require("./routes/leave.routes");
 var department_routes_1 = require("./routes/department.routes");
+var relieve_officer_routes_1 = require("./routes/relieve_officer_routes");
 app.get('/home', function (req, res) {
     var url = req.url;
     res.status(200).json({
@@ -110,6 +111,7 @@ app.use('/api/', user_routes_1.userRoute);
 app.use('/api/', auth_routes_1.authRoute);
 app.use('/api/', leave_routes_1.leaveRouter);
 app.use("/api/", department_routes_1.deptRoute);
+app.use('/api/', relieve_officer_routes_1.relieveRoute);
 //invalid routes
 // app.all("*", (req, res) => {
 //   res.status(404);

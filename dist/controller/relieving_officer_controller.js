@@ -36,14 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.delete_relieve = exports.update_relieve = exports.find_one_relieve = exports.find_all_relieve = exports.createRelive = exports.validateUuid = void 0;
+exports.delete_relieve = exports.update_relieve = exports.find_one_relieve = exports.find_all_relieve = exports.createRelive = void 0;
 var service_1 = require("../service");
 var uuid_1 = require("uuid");
 var validateUuid = function (Id) {
     var isValid = (0, uuid_1.validate)(Id);
     return isValid;
 };
-exports.validateUuid = validateUuid;
 var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, requestingOfficerId, leaveId, relievingOfficerId, requestingUser, relievinguser, leave, create_relieve, error_1;
     return __generator(this, function (_b) {
@@ -111,7 +110,7 @@ var find_one_relieve = function (req, res) { return __awaiter(void 0, void 0, vo
         switch (_a.label) {
             case 0:
                 relieveId = req.params.relieveId;
-                validId = (0, exports.validateUuid)(relieveId);
+                validId = validateUuid(relieveId);
                 if (!validId) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
                 }
@@ -168,7 +167,7 @@ var delete_relieve = function (req, res) { return __awaiter(void 0, void 0, void
         switch (_a.label) {
             case 0:
                 relieveId = req.params.relieveId;
-                validId = (0, exports.validateUuid)(relieveId);
+                validId = validateUuid(relieveId);
                 if (!validId) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
                 }

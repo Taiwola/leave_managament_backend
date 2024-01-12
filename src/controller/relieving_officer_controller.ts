@@ -3,7 +3,7 @@ import {validate as uuidValidate} from "uuid";
 import {Request, Response} from 'express';
 import {RelieveInterface} from "../interfaces"
 
-export const validateUuid = (Id:string) => {
+const validateUuid = (Id:string) => {
     const isValid = uuidValidate(Id);
      
        return isValid;
