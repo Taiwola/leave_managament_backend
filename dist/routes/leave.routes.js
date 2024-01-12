@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.leaveRouter = void 0;
+var express_1 = require("express");
+var route = (0, express_1.Router)();
+exports.leaveRouter = route;
+var controller_1 = require("../controller");
+var authenticate_1 = require("../middlewares/authenticate");
+route.get('/leave', authenticate_1.authentication, controller_1.find_all);
+route.get('/leave/user', authenticate_1.authentication, controller_1.findAllUserLeaves);
+route.get("/leave/:Id", authenticate_1.authentication, controller_1.get_one);
+route.get("/pending", authenticate_1.authentication, controller_1.pendingLeaves);
+route.get('/coverletter/:Id', controller_1.addLeaveCoverLetter);
+route.post('/leave', authenticate_1.authentication, controller_1.create_leave);
+route.patch('/leave/:Id', authenticate_1.authentication, controller_1.updateStatus);
+route.patch('/leave/comment/:Id', authenticate_1.authentication, controller_1.addCommentToLeave);
+route.patch('/leave/department/:Id', authenticate_1.authentication, controller_1.departmentalApproval);
+route.patch('/leave/department/reject/:Id', authenticate_1.authentication, controller_1.departmentReject);
+route.patch('/leave/operation/:Id', authenticate_1.authentication, controller_1.operationsApproval);
+route.patch('/leave/operation/reject/:Id', authenticate_1.authentication, controller_1.operationReject);
+route.delete('/leave/:Id', authenticate_1.authentication, controller_1.delete_leave);
+//# sourceMappingURL=leave.routes.js.map
