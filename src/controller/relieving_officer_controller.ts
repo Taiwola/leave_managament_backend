@@ -45,7 +45,7 @@ export const createRelive = async (req: Request, res: Response) => {
 
 export const find_all_relieve = async (request:Request, res: Response) => {
     const relieve = await findAllRelieve();
-    return relieve;
+    return res.status(200).json(relieve);
 }
 
 export const find_one_relieve = async (req: Request, res: Response) => {

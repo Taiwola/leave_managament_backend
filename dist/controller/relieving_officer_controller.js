@@ -99,7 +99,7 @@ var find_all_relieve = function (request, res) { return __awaiter(void 0, void 0
             case 0: return [4 /*yield*/, (0, service_1.findAllRelieve)()];
             case 1:
                 relieve = _a.sent();
-                return [2 /*return*/, relieve];
+                return [2 /*return*/, res.status(200).json(relieve)];
         }
     });
 }); };
