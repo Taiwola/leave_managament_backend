@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.delete_relieve = exports.update_relieve = exports.find_one_relieve = exports.find_all_relieve = exports.createRelive = void 0;
+exports.delete_relieve = exports.update_relieve = exports.find_one_relieve = exports.find_all_relieve = exports.getByRelievingOfficer = exports.createRelive = void 0;
 var service_1 = require("../service");
 var uuid_1 = require("uuid");
 var validateUuid = function (Id) {
@@ -56,7 +56,7 @@ var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 2:
                 relievinguser = _b.sent();
                 if (!requestingUser || !relievinguser) {
-                    return [2 /*return*/, res.status(400).json({
+                    return [2 /*return*/, res.status(404).json({
                             success: false,
                             message: 'user does not exist'
                         })];
@@ -66,7 +66,7 @@ var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 3:
                 leave = _b.sent();
                 if (!leave) {
-                    return [2 /*return*/, res.status(400).json({
+                    return [2 /*return*/, res.status(404).json({
                             success: false,
                             message: 'leave does not exist'
                         })];
@@ -79,7 +79,7 @@ var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0
                 create_relieve = _b.sent();
                 res.status(200).json({
                     message: 'request successful',
-                    create_relieve: create_relieve
+                    data: create_relieve
                 });
                 return [3 /*break*/, 7];
             case 6:
@@ -92,6 +92,50 @@ var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.createRelive = createRelive;
+var getByRelievingOfficer = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var relieveId, validId, relievingOfficer, relieve, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                relieveId = req.params.relieveId;
+                validId = validateUuid(relieveId);
+                if (!validId) {
+                    return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
+                }
+                return [4 /*yield*/, (0, service_1.getOne)(relieveId)];
+            case 1:
+                relievingOfficer = _a.sent();
+                if (!relievingOfficer) {
+                    return [2 /*return*/, res.status(400).json({
+                            success: false,
+                            message: "User not found"
+                        })];
+                }
+                ;
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 4, , 5]);
+                return [4 /*yield*/, (0, service_1.findRelievingOfficer)(relievingOfficer)];
+            case 3:
+                relieve = _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        success: true,
+                        message: "request successful",
+                        data: relieve
+                    })];
+            case 4:
+                error_2 = _a.sent();
+                console.log(error_2);
+                return [2 /*return*/, res.status(500).json({
+                        message: "internal server error",
+                        error: error_2.message,
+                        success: false
+                    })];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getByRelievingOfficer = getByRelievingOfficer;
 var find_all_relieve = function (request, res) { return __awaiter(void 0, void 0, void 0, function () {
     var relieve;
     return __generator(this, function (_a) {
@@ -131,32 +175,50 @@ var find_one_relieve = function (req, res) { return __awaiter(void 0, void 0, vo
 }); };
 exports.find_one_relieve = find_one_relieve;
 var update_relieve = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var partialRelieveData, reliveId, updatedRelieve, error_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, is_viewed, accept_relieve, relieving_officer, relieveId, validId, relieve, partialRelieveData, updatedRelieve, error_3;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                partialRelieveData = req.body.partialRelieveData;
-                reliveId = req.params.reliveId;
-                _a.label = 1;
+                _a = req.body, is_viewed = _a.is_viewed, accept_relieve = _a.accept_relieve, relieving_officer = _a.relieving_officer;
+                relieveId = req.params.relieveId;
+                validId = validateUuid(relieveId);
+                if (!validId) {
+                    return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
+                }
+                return [4 /*yield*/, (0, service_1.findOneRelieve)(relieveId)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, service_1.updateRelieve)(partialRelieveData, reliveId)];
+                relieve = _b.sent();
+                if (!relieve) {
+                    return [2 /*return*/, res.status(400).json({
+                            success: false,
+                            message: "request not found"
+                        })];
+                }
+                partialRelieveData = {
+                    is_viewed: is_viewed,
+                    relieving_officer: relieving_officer,
+                    accept_relieve: accept_relieve
+                };
+                _b.label = 2;
             case 2:
-                updatedRelieve = _a.sent();
+                _b.trys.push([2, 4, , 5]);
+                return [4 /*yield*/, (0, service_1.updateRelieve)(partialRelieveData, relieveId)];
+            case 3:
+                updatedRelieve = _b.sent();
                 return [2 /*return*/, res.status(200).json({
                         message: 'update successful',
                         updateRelieve: service_1.updateRelieve,
                         success: true
                     })];
-            case 3:
-                error_2 = _a.sent();
-                console.log(error_2);
+            case 4:
+                error_3 = _b.sent();
+                console.log(error_3);
                 res.status(500).json({
                     message: 'Internal server error',
-                    error: error_2.message
+                    error: error_3.message
                 });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

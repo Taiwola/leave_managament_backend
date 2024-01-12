@@ -66,7 +66,7 @@ export class Leave {
      @ManyToOne(()=>User, (user)=>user.leave)
      user: User;
 
-     @OneToOne(() => Relieving_officer)
+     @OneToOne(() => Relieving_officer, (relieving_officer) => relieving_officer.relieve_leave)
      reliving_officer: Relieving_officer
 
     @CreateDateColumn({
@@ -108,7 +108,8 @@ export class Relieving_officer {
     @Column({type: "boolean", nullable: true})
     accept_relieve: boolean
 
-    @OneToOne(() => Leave)
+    @OneToOne(() => Leave, (leave) => leave.reliving_officer)
+    @JoinColumn()
     relieve_leave: Leave // one to one
     
     @ManyToOne(() => User, (user) => user.relieving_officer)
@@ -117,9 +118,6 @@ export class Relieving_officer {
     @ManyToOne(() => User, (user) => user.requesting_officer)
     requesting_officer: User // many to one
 
-    @CreateDateColumn({
-        type: "timestamp",
-        nullable: true
-      })
-    acceptance_date: Date
+    @Column({type: "varchar", nullable: true, length: 255})
+    acceptance_date: string;
 }

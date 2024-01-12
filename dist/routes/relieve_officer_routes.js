@@ -9,6 +9,7 @@ var controller_1 = require("../controller");
 var authenticate_1 = require("../middlewares/authenticate");
 route.get('/relieving_officer', authenticate_1.authentication, controller_1.find_all_relieve);
 route.get('/relieving_officer/:relieveId', authenticate_1.authentication, controller_1.find_one_relieve);
+route.get('/relieving_officer/officer/:relieveId', authenticate_1.authentication, controller_1.getByRelievingOfficer);
 route.post('/relieving_officer', authenticate_1.authentication, controller_1.createRelive);
 route.patch('/relieving_officer/:relieveId', authenticate_1.authentication, controller_1.update_relieve);
 route.delete('/relieving_officer/:relieveId', authenticate_1.authentication, controller_1.delete_relieve);

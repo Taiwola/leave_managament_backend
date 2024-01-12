@@ -1,7 +1,7 @@
-import {createRequest, updateRelieve, findAllRelieve, findOneRelieve, deleteRelieve, getOne, getOneLeave} from "../service";
+import {createRequest, updateRelieve, findAllRelieve, findOneRelieve, deleteRelieve, getOne, getOneLeave, findRelievingOfficer} from "../service";
 import {validate as uuidValidate} from "uuid";
 import {Request, Response} from 'express';
-import {RelieveInterface} from "../interfaces"
+import {PartialRelieveInterface, RelieveInterface} from "../interfaces"
 
 const validateUuid = (Id:string) => {
     const isValid = uuidValidate(Id);
@@ -15,7 +15,7 @@ export const createRelive = async (req: Request, res: Response) => {
     const relievinguser = await getOne(relievingOfficerId);
 
     if (!requestingUser || !relievinguser) {
-        return res.status(400).json({
+        return res.status(404).json({
             success: false,
             message: 'user does not exist'
         });
@@ -24,7 +24,7 @@ export const createRelive = async (req: Request, res: Response) => {
     const leave = await getOneLeave(leaveId);
 
     if (!leave) {
-        return res.status(400).json({
+        return res.status(404).json({
             success: false,
             message: 'leave does not exist'
         });
@@ -35,12 +35,48 @@ export const createRelive = async (req: Request, res: Response) => {
        const create_relieve = await createRequest(requestingUser, relievinguser, leave);
        res.status(200).json({
         message: 'request successful',
-        create_relieve
+        data: create_relieve
        })
    } catch (error) {
         console.log(error);
         res.status(500).json({message: 'internal server error', error: error.message, success: false});
    }
+}
+
+export const getByRelievingOfficer = async (req: Request, res: Response) => {
+    const {relieveId} = req.params;
+
+    const validId = validateUuid(relieveId);
+
+    if (!validId){
+        return res.status(400).json({message:"Invalid Id"});
+    }
+
+    const relievingOfficer = await getOne(relieveId);
+
+    if (!relievingOfficer) {
+        return res.status(400).json({
+            success: false,
+            message: "User not found"
+        })
+    };
+
+    
+    try {
+        const relieve = await findRelievingOfficer(relievingOfficer);
+        return res.status(200).json({
+            success: true,
+            message: "request successful",
+            data: relieve
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "internal server error",
+            error: error.message,
+            success: false
+        })
+    }
 }
 
 export const find_all_relieve = async (request:Request, res: Response) => {
@@ -73,12 +109,31 @@ export const find_one_relieve = async (req: Request, res: Response) => {
 
 
 export const update_relieve = async (req: Request, res: Response) => {
-    const { partialRelieveData }: { partialRelieveData: Partial<RelieveInterface> } = req.body;
-    const {reliveId} = req.params;
+    const { is_viewed, accept_relieve, relieving_officer  } = req.body;
+    const {relieveId} = req.params;
 
+
+    const validId = validateUuid(relieveId);
+
+    if (!validId){
+        return res.status(400).json({message:"Invalid Id"});
+    }
+
+    const relieve = await findOneRelieve(relieveId);
+
+    if (!relieve) {
+        return res.status(400).json({
+            success: false,
+            message: "request not found"
+        })
+    }
+
+    const partialRelieveData: PartialRelieveInterface = {
+        is_viewed, relieving_officer, accept_relieve
+    }
     
     try {
-        const updatedRelieve = await updateRelieve(partialRelieveData, reliveId);
+        const updatedRelieve = await updateRelieve(partialRelieveData, relieveId);
         return res.status(200).json({
             message: 'update successful',
             updateRelieve,

@@ -91,7 +91,7 @@ var Leave = /** @class */ (function () {
         __metadata("design:type", user_1.User)
     ], Leave.prototype, "user", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return Relieving_officer; }),
+        (0, typeorm_1.OneToOne)(function () { return Relieving_officer; }, function (relieving_officer) { return relieving_officer.relieve_leave; }),
         __metadata("design:type", Relieving_officer)
     ], Leave.prototype, "reliving_officer", void 0);
     __decorate([
@@ -152,7 +152,8 @@ var Relieving_officer = /** @class */ (function () {
         __metadata("design:type", Boolean)
     ], Relieving_officer.prototype, "accept_relieve", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return Leave; }),
+        (0, typeorm_1.OneToOne)(function () { return Leave; }, function (leave) { return leave.reliving_officer; }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", Leave // one to one
         )
     ], Relieving_officer.prototype, "relieve_leave", void 0);
@@ -167,11 +168,8 @@ var Relieving_officer = /** @class */ (function () {
         )
     ], Relieving_officer.prototype, "requesting_officer", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({
-            type: "timestamp",
-            nullable: true
-        }),
-        __metadata("design:type", Date)
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true, length: 255 }),
+        __metadata("design:type", String)
     ], Relieving_officer.prototype, "acceptance_date", void 0);
     Relieving_officer = __decorate([
         (0, typeorm_1.Entity)({ name: 'relieving_officer' })

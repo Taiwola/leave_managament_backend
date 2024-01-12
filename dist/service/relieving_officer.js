@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,33 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRelieve = exports.updateRelieve = exports.findOneRelieve = exports.findAllRelieve = exports.createRequest = void 0;
+exports.deleteRelieve = exports.updateRelieve = exports.findOneRelieve = exports.findAllRelieve = exports.findRelievingOfficer = exports.createRequest = void 0;
 var data_source_1 = require("../database/data-source");
 var entity_1 = require("../database/entity/entity");
 var Relieving_officer_repo = data_source_1.connectionSource.getRepository(entity_1.Relieving_officer);
 var createRequest = function (requestingUser, relieving_user, leave) { return __awaiter(void 0, void 0, void 0, function () {
-    var relievingOfficer, officer;
+    var officer, relieve;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                relievingOfficer = new entity_1.Relieving_officer();
-                relievingOfficer.requesting_officer = requestingUser;
-                relievingOfficer.relieving_officer = relieving_user;
-                relievingOfficer.relieve_leave = leave;
-                return [4 /*yield*/, Relieving_officer_repo.save(relievingOfficer)];
+                officer = Relieving_officer_repo.create({
+                    relieve_leave: leave,
+                    relieving_officer: relieving_user,
+                    requesting_officer: requestingUser
+                });
+                return [4 /*yield*/, Relieving_officer_repo.save(officer)];
             case 1:
-                officer = _a.sent();
-                return [2 /*return*/, officer];
+                relieve = _a.sent();
+                return [2 /*return*/, relieve];
         }
     });
 }); };
 exports.createRequest = createRequest;
+var findRelievingOfficer = function (relievingUser) { return __awaiter(void 0, void 0, void 0, function () {
+    var relieving_officers;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, Relieving_officer_repo.find({
+                    where: { relieving_officer: { id: relievingUser.id } }
+                })];
+            case 1:
+                relieving_officers = _a.sent();
+                return [2 /*return*/, relieving_officers];
+        }
+    });
+}); };
+exports.findRelievingOfficer = findRelievingOfficer;
 var findAllRelieve = function () { return __awaiter(void 0, void 0, void 0, function () {
     var relieve;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, Relieving_officer_repo.find({
-                    select: ['relieve_leave', 'relieving_officer', 'requesting_officer']
+                    relations: ['relieve_leave', 'relieving_officer', 'requesting_officer']
                 })];
             case 1:
                 relieve = _a.sent();
@@ -88,7 +92,7 @@ var findOneRelieve = function (id) { return __awaiter(void 0, void 0, void 0, fu
         switch (_a.label) {
             case 0: return [4 /*yield*/, Relieving_officer_repo.findOne({
                     where: { id: id },
-                    select: ['relieving_officer', 'relieve_leave', 'requesting_officer']
+                    relations: ['relieving_officer', 'relieve_leave', 'requesting_officer']
                 })];
             case 1:
                 relive = _a.sent();
@@ -98,15 +102,21 @@ var findOneRelieve = function (id) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.findOneRelieve = findOneRelieve;
 var updateRelieve = function (relieveData, relieveId) { return __awaiter(void 0, void 0, void 0, function () {
-    var relieve_officer, updatedRelieveOfficer;
+    var updateResult, updatedRelieveOfficer;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, Relieving_officer_repo.update(relieveId, __assign({}, relieveData))];
+            case 0: return [4 /*yield*/, Relieving_officer_repo.update(relieveId, {
+                    is_viewed: relieveData.is_viewed,
+                    accept_relieve: relieveData.accept_relieve,
+                    relieving_officer: relieveData.relieving_officer
+                })];
             case 1:
-                relieve_officer = _a.sent();
-                return [4 /*yield*/, Relieving_officer_repo.findOne({
-                        where: { id: relieveId }
-                    })];
+                updateResult = _a.sent();
+                // Check if any rows were affected
+                if (updateResult.affected === 0) {
+                    throw new Error("No rows were updated. Check if the relieveId is valid.");
+                }
+                return [4 /*yield*/, Relieving_officer_repo.findOne({ where: { id: relieveId } })];
             case 2:
                 updatedRelieveOfficer = _a.sent();
                 return [2 /*return*/, updatedRelieveOfficer];
