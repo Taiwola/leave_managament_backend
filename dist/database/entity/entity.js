@@ -92,8 +92,9 @@ var Leave = /** @class */ (function () {
     ], Leave.prototype, "user", void 0);
     __decorate([
         (0, typeorm_1.OneToOne)(function () { return Relieving_officer; }, function (relieving_officer) { return relieving_officer.relieve_leave; }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", Relieving_officer)
-    ], Leave.prototype, "reliving_officer", void 0);
+    ], Leave.prototype, "relieving_officer", void 0);
     __decorate([
         (0, typeorm_1.CreateDateColumn)({
             type: "timestamp",
@@ -152,7 +153,7 @@ var Relieving_officer = /** @class */ (function () {
         __metadata("design:type", Boolean)
     ], Relieving_officer.prototype, "accept_relieve", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return Leave; }, function (leave) { return leave.reliving_officer; }),
+        (0, typeorm_1.OneToOne)(function () { return Leave; }, function (leave) { return leave.relieving_officer; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", Leave // one to one
         )

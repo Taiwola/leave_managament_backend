@@ -26,7 +26,7 @@ export const createLeave = async (data: LeaveDetails, user: User) => {
 export const getUserLeaves = async (user: User) => {
     const leave = await leaveRepo.find({
         where: {user: {id: user.id}},
-        relations: ['user', 'user.staff']
+        relations: ['user', 'user.staff', 'relieving_officer']
     });
     return leave;
 }
@@ -45,7 +45,7 @@ export const getOneLeave = async (id: string) => {
 
     const leave = await leaveRepo.findOne({
         where: {id},
-        relations: ['user', 'user.staff']
+        relations: ['user', 'user.staff', 'relieving_officer']
     });
 
     return leave
@@ -54,7 +54,7 @@ export const getOneLeave = async (id: string) => {
 
 export const getAllLeave = async () => {
     const leave = await leaveRepo.find({
-        relations: ['user', 'user.staff'],
+        relations: ['user', 'user.staff', 'relieving_officer'],
         order: {createdAt: 'desc'}
     });
     return leave;

@@ -102,14 +102,30 @@ var findOneRelieve = function (id) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.findOneRelieve = findOneRelieve;
 var updateRelieve = function (relieveData, relieveId) { return __awaiter(void 0, void 0, void 0, function () {
-    var updateResult, updatedRelieveOfficer;
+    var currentDate, formattedDate, date, updateResult, updatedRelieveOfficer;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, Relieving_officer_repo.update(relieveId, {
-                    is_viewed: relieveData.is_viewed,
-                    accept_relieve: relieveData.accept_relieve,
-                    relieving_officer: relieveData.relieving_officer
-                })];
+            case 0:
+                currentDate = new Date();
+                formattedDate = new Intl.DateTimeFormat('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                }).format(currentDate);
+                date = relieveData.accept_relieve === true ? formattedDate : null;
+                return [4 /*yield*/, Relieving_officer_repo
+                        .createQueryBuilder()
+                        .update() // Replace with your actual repository name
+                        .set({
+                        is_viewed: relieveData.is_viewed,
+                        accept_relieve: relieveData.accept_relieve,
+                        acceptance_date: date,
+                    }) // Specify the updated values
+                        .where("id = :id", { id: relieveId })
+                        .execute()];
             case 1:
                 updateResult = _a.sent();
                 // Check if any rows were affected
@@ -119,6 +135,7 @@ var updateRelieve = function (relieveData, relieveId) { return __awaiter(void 0,
                 return [4 /*yield*/, Relieving_officer_repo.findOne({ where: { id: relieveId } })];
             case 2:
                 updatedRelieveOfficer = _a.sent();
+                console.log(updatedRelieveOfficer);
                 return [2 /*return*/, updatedRelieveOfficer];
         }
     });

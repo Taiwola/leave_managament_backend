@@ -143,7 +143,10 @@ var find_all_relieve = function (request, res) { return __awaiter(void 0, void 0
             case 0: return [4 /*yield*/, (0, service_1.findAllRelieve)()];
             case 1:
                 relieve = _a.sent();
-                return [2 /*return*/, res.status(200).json(relieve)];
+                return [2 /*return*/, res.status(200).json({
+                        message: "success",
+                        data: relieve
+                    })];
         }
     });
 }); };
@@ -168,23 +171,25 @@ var find_one_relieve = function (req, res) { return __awaiter(void 0, void 0, vo
                 }
                 return [2 /*return*/, res.status(200).json({
                         message: 'Request successfull',
-                        relieve: relieve
+                        data: relieve
                     })];
         }
     });
 }); };
 exports.find_one_relieve = find_one_relieve;
 var update_relieve = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, is_viewed, accept_relieve, relieving_officer, relieveId, validId, relieve, partialRelieveData, updatedRelieve, error_3;
+    var _a, is_viewed, accept_relieve, relieveId, validId, view, relieve, partialRelieveData, updatedRelieve, error_3;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, is_viewed = _a.is_viewed, accept_relieve = _a.accept_relieve, relieving_officer = _a.relieving_officer;
+                _a = req.body, is_viewed = _a.is_viewed, accept_relieve = _a.accept_relieve;
                 relieveId = req.params.relieveId;
+                console.log(accept_relieve);
                 validId = validateUuid(relieveId);
                 if (!validId) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
                 }
+                view = !is_viewed ? false : is_viewed;
                 return [4 /*yield*/, (0, service_1.findOneRelieve)(relieveId)];
             case 1:
                 relieve = _b.sent();
@@ -195,8 +200,7 @@ var update_relieve = function (req, res) { return __awaiter(void 0, void 0, void
                         })];
                 }
                 partialRelieveData = {
-                    is_viewed: is_viewed,
-                    relieving_officer: relieving_officer,
+                    is_viewed: view,
                     accept_relieve: accept_relieve
                 };
                 _b.label = 2;

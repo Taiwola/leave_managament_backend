@@ -53,12 +53,29 @@ export const findOneRelieve = async (id: string) => {
 
 export const updateRelieve = async (relieveData: Partial<RelieveInterface>, relieveId: string) => {
 
+    const currentDate = new Date();
+
+    const formattedDate = new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+      month: '2-digit',
+      year: 'numeric', // Change this to '2-digit' if you want a 2-digit year
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(currentDate);
+    
+    const date = relieveData.accept_relieve === true ? formattedDate : null; 
     // Update the entity
-    const updateResult = await Relieving_officer_repo.update(relieveId, {
+    const updateResult = await Relieving_officer_repo
+    .createQueryBuilder()
+    .update() // Replace with your actual repository name
+    .set({ 
         is_viewed: relieveData.is_viewed,
         accept_relieve: relieveData.accept_relieve,
-        relieving_officer: relieveData.relieving_officer
-    });
+        acceptance_date: date,
+     }) // Specify the updated values
+    .where("id = :id", { id: relieveId })
+    .execute();
 
     // Check if any rows were affected
     if (updateResult.affected === 0) {
@@ -67,6 +84,7 @@ export const updateRelieve = async (relieveData: Partial<RelieveInterface>, reli
 
     // Retrieve the updated entity
     const updatedRelieveOfficer = await Relieving_officer_repo.findOne({where: {id: relieveId}});
+    console.log(updatedRelieveOfficer);
 
     return updatedRelieveOfficer;
 };

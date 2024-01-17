@@ -69,7 +69,7 @@ var getUserLeaves = function (user) { return __awaiter(void 0, void 0, void 0, f
         switch (_a.label) {
             case 0: return [4 /*yield*/, leaveRepo.find({
                     where: { user: { id: user.id } },
-                    relations: ['user', 'user.staff']
+                    relations: ['user', 'user.staff', 'relieving_officer']
                 })];
             case 1:
                 leave = _a.sent();
@@ -99,7 +99,7 @@ var getOneLeave = function (id) { return __awaiter(void 0, void 0, void 0, funct
         switch (_a.label) {
             case 0: return [4 /*yield*/, leaveRepo.findOne({
                     where: { id: id },
-                    relations: ['user', 'user.staff']
+                    relations: ['user', 'user.staff', 'relieving_officer']
                 })];
             case 1:
                 leave = _a.sent();
@@ -113,7 +113,7 @@ var getAllLeave = function () { return __awaiter(void 0, void 0, void 0, functio
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, leaveRepo.find({
-                    relations: ['user', 'user.staff'],
+                    relations: ['user', 'user.staff', 'relieving_officer'],
                     order: { createdAt: 'desc' }
                 })];
             case 1:

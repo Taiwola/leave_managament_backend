@@ -51,7 +51,7 @@ import {authRoute} from "./routes/auth.routes";
 import {leaveRouter} from "./routes/leave.routes";
 import {deptRoute} from "./routes/department.routes";
 import {relieveRoute} from "./routes/relieve_officer_routes"
-import path from "path";
+import {coverletterRoute} from "./routes/coverletter.route"
 
 app.get('/home', (req, res) => {
   const url = req.url;
@@ -61,45 +61,13 @@ app.get('/home', (req, res) => {
     })
 });
 
-// app.get('/', async (req, res) => {
-//   const leaveDetails = {
-//     firstName: 'John',
-//     lastName: 'Doe',
-//     numberOfDays: 5,
-//     startDate: '2023-01-01',
-//     endDate: '2023-01-05',
-//     leaveTitle: 'Vacation'
-//   };
-
-//   // Wrap the render in a Promise to ensure it completes before Puppeteer
-//   await new Promise<void>((resolve, reject) => {
-//     res.render('index', leaveDetails, (err, html) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         res.send(html)
-//         resolve();
-//       }
-//     });
-//   });
-
-//   const browser = await puppeteer.launch({
-//     headless: "new",
-//   });
-//   const page = await browser.newPage();
-
-//   await page.goto('http://localhost:8000/').catch(error => console.error('Page navigation error:', error));; // Use the correct URL for your server
-//   // await page.screenshot({ path: './public/coverletter.png' });
-//   await page.pdf({ path: './public/local.pdf' });
-//   await browser.close();
-
-// });
 
 app.use('/api/', userRoute);
 app.use('/api/', authRoute);
 app.use('/api/', leaveRouter);
 app.use("/api/", deptRoute);
 app.use('/api/', relieveRoute);
+app.use('/api/', coverletterRoute);
 
 
 

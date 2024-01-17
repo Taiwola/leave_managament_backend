@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Agreement</title>
+
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        div {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        strong {
+            color: #0066cc;
+        }
+
+        img {
+            width: 150px; /* Adjust the width as needed */
+            height: auto;
+            display: block;
+            margin: 10px auto; /* Center the image */
+        }
+
+        div > div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Leave Agreement</h2>
+        <p>
+            I <strong> <%= relivingOfficerName %> </strong> agree to relieve Mr./Mrs. <strong><%= requestingOfficerName %></strong> during the period of his/her leave starting from <strong><%= leaveStartDate %></strong> and to end on <strong><%= leaveEndDate %></strong>.
+        </p>
+        <div>
+           <div>
+               Signature: <strong><img src="/signature.png" alt="...signature"></strong>
+           </div>
+           <div>
+            <p>Date: <strong><%= acceptanceDate %></strong></p>
+           </div>
+            
+        </div>
+    </div>
+</body>
+</html>

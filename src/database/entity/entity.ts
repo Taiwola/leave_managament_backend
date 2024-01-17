@@ -67,7 +67,8 @@ export class Leave {
      user: User;
 
      @OneToOne(() => Relieving_officer, (relieving_officer) => relieving_officer.relieve_leave)
-     reliving_officer: Relieving_officer
+     @JoinColumn()
+     relieving_officer: Relieving_officer
 
     @CreateDateColumn({
         type: "timestamp",
@@ -100,15 +101,14 @@ export class Department {
 export class Relieving_officer {
     @PrimaryGeneratedColumn("uuid")
     id: string
-
-    
+     
     @Column({type: 'boolean', default: false})
     is_viewed: boolean
     
     @Column({type: "boolean", nullable: true})
     accept_relieve: boolean
 
-    @OneToOne(() => Leave, (leave) => leave.reliving_officer)
+    @OneToOne(() => Leave, (leave) => leave.relieving_officer)
     @JoinColumn()
     relieve_leave: Leave // one to one
     

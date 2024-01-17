@@ -81,7 +81,10 @@ export const getByRelievingOfficer = async (req: Request, res: Response) => {
 
 export const find_all_relieve = async (request:Request, res: Response) => {
     const relieve = await findAllRelieve();
-    return res.status(200).json(relieve);
+    return res.status(200).json({
+        message: "success",
+        data: relieve
+    });
 }
 
 export const find_one_relieve = async (req: Request, res: Response) => {
@@ -103,14 +106,16 @@ export const find_one_relieve = async (req: Request, res: Response) => {
 
     return res.status(200).json({
         message: 'Request successfull',
-        relieve
+        data: relieve
     })
 }
 
 
 export const update_relieve = async (req: Request, res: Response) => {
-    const { is_viewed, accept_relieve, relieving_officer  } = req.body;
+    const { is_viewed, accept_relieve  } = req.body;
     const {relieveId} = req.params;
+
+    console.log(accept_relieve);
 
 
     const validId = validateUuid(relieveId);
@@ -118,6 +123,8 @@ export const update_relieve = async (req: Request, res: Response) => {
     if (!validId){
         return res.status(400).json({message:"Invalid Id"});
     }
+
+    const view = !is_viewed ? false : is_viewed
 
     const relieve = await findOneRelieve(relieveId);
 
@@ -128,8 +135,9 @@ export const update_relieve = async (req: Request, res: Response) => {
         })
     }
 
+
     const partialRelieveData: PartialRelieveInterface = {
-        is_viewed, relieving_officer, accept_relieve
+        is_viewed: view,  accept_relieve
     }
     
     try {

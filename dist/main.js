@@ -71,6 +71,7 @@ var auth_routes_1 = require("./routes/auth.routes");
 var leave_routes_1 = require("./routes/leave.routes");
 var department_routes_1 = require("./routes/department.routes");
 var relieve_officer_routes_1 = require("./routes/relieve_officer_routes");
+var coverletter_route_1 = require("./routes/coverletter.route");
 app.get('/home', function (req, res) {
     var url = req.url;
     res.status(200).json({
@@ -78,40 +79,12 @@ app.get('/home', function (req, res) {
         url: url
     });
 });
-// app.get('/', async (req, res) => {
-//   const leaveDetails = {
-//     firstName: 'John',
-//     lastName: 'Doe',
-//     numberOfDays: 5,
-//     startDate: '2023-01-01',
-//     endDate: '2023-01-05',
-//     leaveTitle: 'Vacation'
-//   };
-//   // Wrap the render in a Promise to ensure it completes before Puppeteer
-//   await new Promise<void>((resolve, reject) => {
-//     res.render('index', leaveDetails, (err, html) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         res.send(html)
-//         resolve();
-//       }
-//     });
-//   });
-//   const browser = await puppeteer.launch({
-//     headless: "new",
-//   });
-//   const page = await browser.newPage();
-//   await page.goto('http://localhost:8000/').catch(error => console.error('Page navigation error:', error));; // Use the correct URL for your server
-//   // await page.screenshot({ path: './public/coverletter.png' });
-//   await page.pdf({ path: './public/local.pdf' });
-//   await browser.close();
-// });
 app.use('/api/', user_routes_1.userRoute);
 app.use('/api/', auth_routes_1.authRoute);
 app.use('/api/', leave_routes_1.leaveRouter);
 app.use("/api/", department_routes_1.deptRoute);
 app.use('/api/', relieve_officer_routes_1.relieveRoute);
+app.use('/api/', coverletter_route_1.coverletterRoute);
 //invalid routes
 // app.all("*", (req, res) => {
 //   res.status(404);
