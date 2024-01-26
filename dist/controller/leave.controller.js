@@ -189,31 +189,68 @@ var get_one = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.get_one = get_one;
 var delete_leave = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Id, isValid, deletedLeave, error_4;
+    var Id, isValid, relieve, deleteLeaveError_1, deleteRelieveResult, deleteError_1, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 Id = req.params.Id;
                 isValid = (0, user_controller_1.validateUuid)(Id);
                 if (!isValid) {
-                    return [2 /*return*/, res.status(400).send({ message: "Invalid Id" })];
+                    return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
                 }
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, service_1.deleteLeave)(Id)];
+                _a.trys.push([1, 12, , 13]);
+                return [4 /*yield*/, (0, service_1.getOneRelieveForLeave)(Id)];
             case 2:
-                deletedLeave = _a.sent();
-                return [2 /*return*/, res.status(200).json({
-                        message: "leave deleted successfully"
-                    })];
+                relieve = _a.sent();
+                if (!!relieve) return [3 /*break*/, 7];
+                _a.label = 3;
             case 3:
+                _a.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, (0, service_1.deleteLeave)(Id)];
+            case 4:
+                _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        message: "Leave deleted successfully"
+                    })];
+            case 5:
+                deleteLeaveError_1 = _a.sent();
+                console.log(deleteLeaveError_1);
+                return [2 /*return*/, res.status(500).json({
+                        message: "Internal server error"
+                    })];
+            case 6: return [3 /*break*/, 11];
+            case 7:
+                _a.trys.push([7, 10, , 11]);
+                return [4 /*yield*/, (0, service_1.deleteRelieve)(relieve.id)];
+            case 8:
+                deleteRelieveResult = _a.sent();
+                if (deleteRelieveResult.affected <= 0) {
+                    return [2 /*return*/, res.status(404).json({
+                            message: "Leave not found or has already been deleted"
+                        })];
+                }
+                return [4 /*yield*/, (0, service_1.deleteLeave)(Id)];
+            case 9:
+                _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        message: "Leave deleted successfully"
+                    })];
+            case 10:
+                deleteError_1 = _a.sent();
+                console.log(deleteError_1);
+                return [2 /*return*/, res.status(500).json({
+                        message: "Internal server error"
+                    })];
+            case 11: return [3 /*break*/, 13];
+            case 12:
                 error_4 = _a.sent();
                 console.log(error_4);
                 return [2 /*return*/, res.status(500).json({
-                        message: "internal server error"
+                        message: "Internal server error"
                     })];
-            case 4: return [2 /*return*/];
+            case 13: return [2 /*return*/];
         }
     });
 }); };

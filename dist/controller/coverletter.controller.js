@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.optAndMgtApproval = exports.directorApproval = exports.addRelievingOfficerCoverLetter = void 0;
 var user_controller_1 = require("./user.controller");
 var service_1 = require("../service");
-var entity_1 = require("../database/entity/entity");
 function getCurrentDateTime() {
     var currentDate = new Date();
     var year = currentDate.getFullYear();
@@ -57,7 +56,6 @@ var addRelievingOfficerCoverLetter = function (req, res) { return __awaiter(void
         switch (_a.label) {
             case 0:
                 Id = req.params.Id;
-                console.log('here');
                 isValid = (0, user_controller_1.validateUuid)(Id);
                 if (!isValid) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
@@ -116,11 +114,6 @@ var directorApproval = function (req, res) { return __awaiter(void 0, void 0, vo
                     return [2 /*return*/, res.status(404).json({ message: 'Requested leave does not exist' })];
                 }
                 ;
-                if (leave.departmental_approval !== entity_1.Approval_type.reviewed) {
-                    return [2 /*return*/, res.status(404).json({
-                            message: 'Not authorized'
-                        })];
-                }
                 dataDetails = {
                     requestingOfficerName: leave.user.firstname + " " + leave.user.lastname,
                     date: 11 - 2 - 2024
@@ -144,40 +137,42 @@ var directorApproval = function (req, res) { return __awaiter(void 0, void 0, vo
 }); };
 exports.directorApproval = directorApproval;
 var optAndMgtApproval = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Id, departmentId, isValid, departmentValid, leave, department, signature, dataDetails;
+    var Id, isValid, relieve, department, deptOfOptAndMgt, requesting_officer, directorSignature, dataDetails, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 Id = req.params.Id;
-                departmentId = req.body.departmentId;
                 isValid = (0, user_controller_1.validateUuid)(Id);
-                departmentValid = (0, user_controller_1.validateUuid)(departmentId);
-                if (!isValid || departmentValid) {
+                if (!isValid) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
                 }
-                return [4 /*yield*/, (0, service_1.getOneLeave)(Id)];
+                return [4 /*yield*/, (0, service_1.findOneRelieve)(Id)];
             case 1:
-                leave = _a.sent();
-                if (!leave) {
+                relieve = _a.sent();
+                if (!relieve) {
                     return [2 /*return*/, res.status(404).json({ message: 'Requested leave does not exist' })];
                 }
                 ;
-                return [4 /*yield*/, (0, service_1.findOne_dept)(departmentId)];
+                return [4 /*yield*/, (0, service_1.findAll_dept)()];
             case 2:
                 department = _a.sent();
-                if (!department) {
-                    return [2 /*return*/, res.status(400).json({
-                            message: "Request not found"
-                        })];
-                }
-                ;
-                signature = department.director.signature;
+                deptOfOptAndMgt = department.filter(function (dept) { return dept.name === 'operation and management'; }).flat().map(function (dept) {
+                    return dept.director.signature;
+                });
+                requesting_officer = relieve.requesting_officer.firstname + ' ' + relieve.requesting_officer.lastname;
+                directorSignature = deptOfOptAndMgt[0];
                 dataDetails = {
-                    requestingOfficerName: leave.user.firstname + " " + leave.user.lastname,
-                    leaveStartDate: leave.start_date,
-                    leaveEndDate: leave.end_date,
-                    date: getCurrentDateTime()
+                    requestingOfficerName: requesting_officer,
+                    startDate: relieve.relieve_leave.start_date,
+                    endDate: relieve.relieve_leave.end_date,
+                    date: getCurrentDateTime(),
+                    leaveYear: 2024,
+                    leaveInstallment: 1,
+                    approvalDate: relieve.acceptance_date
                 };
+                _a.label = 3;
+            case 3:
+                _a.trys.push([3, 5, , 6]);
                 return [4 /*yield*/, new Promise(function (resolve, reject) {
                         res.render('operation', dataDetails, function (err, html) {
                             if (err) {
@@ -189,9 +184,17 @@ var optAndMgtApproval = function (req, res) { return __awaiter(void 0, void 0, v
                             }
                         });
                     })];
-            case 3:
+            case 4:
                 _a.sent();
-                return [2 /*return*/];
+                return [3 /*break*/, 6];
+            case 5:
+                error_1 = _a.sent();
+                console.log(error_1);
+                res.status(500).json({
+                    message: 'internal server error'
+                });
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };

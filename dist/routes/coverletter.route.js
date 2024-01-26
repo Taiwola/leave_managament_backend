@@ -7,4 +7,5 @@ exports.coverletterRoute = route;
 var controller_1 = require("../controller");
 route.get("/reliveletter/:Id", controller_1.addRelievingOfficerCoverLetter);
 route.get("/directorletter/:Id", controller_1.directorApproval);
+route.get("/operationsletter/:Id", controller_1.optAndMgtApproval);
 //# sourceMappingURL=coverletter.route.js.map

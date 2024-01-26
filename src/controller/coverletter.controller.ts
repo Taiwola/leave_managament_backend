@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { validateUuid } from "./user.controller";
-import {getOneLeave, findOneRelieve, findOne_dept} from "../service";
+import {getOneLeave, findOneRelieve, findOne_dept, findAll_dept} from "../service";
 import { Approval_type } from "../database/entity/entity";
 
 
@@ -22,7 +22,6 @@ function getCurrentDateTime() {
 
 export const addRelievingOfficerCoverLetter = async (req: Request, res: Response) => {
     const {Id} = req.params;
-    console.log('here')
 
     const isValid = validateUuid(Id);
 
@@ -76,11 +75,6 @@ export const directorApproval = async (req: Request, res: Response) => {
         return res.status(404).json({message:'Requested leave does not exist'});
     };
 
-    if (leave.departmental_approval !== Approval_type.reviewed) {
-        return res.status(404).json({
-            message: 'Not authorized'
-        });
-    }
 
     const dataDetails = {
         requestingOfficerName: leave.user.firstname + " " + leave.user.lastname,
@@ -103,47 +97,59 @@ export const directorApproval = async (req: Request, res: Response) => {
 
 export const optAndMgtApproval = async (req: Request, res: Response) => {
     const {Id} = req.params
-    const {departmentId} = req.body;
 
     const isValid = validateUuid(Id);
-    const departmentValid = validateUuid(departmentId);
 
-    if (!isValid || departmentValid) {
+    if (!isValid) {
         return res.status(400).json({message:"Invalid Id"});
     }
 
-    const leave = await getOneLeave(Id);
+    const relieve = await findOneRelieve(Id);
 
-    if (!leave) {
+    if (!relieve) {
         return res.status(404).json({message:'Requested leave does not exist'});
     };
 
-    const department = await findOne_dept(departmentId);
+    const department = await findAll_dept();
 
-    if (!department) {
-        return res.status(400).json({
-            message: "Request not found"
-        });
-    };
+    const deptOfOptAndMgt = department.filter((dept) => dept.name === 'operation and management').flat().map((dept) => {
+        return dept.director.signature
+    });
 
-    const signature = department.director.signature;
+    const requesting_officer = relieve.requesting_officer.firstname + ' ' +  relieve.requesting_officer.lastname;
+    const directorSignature = deptOfOptAndMgt[0]
+  
 
     const dataDetails = {
-        requestingOfficerName: leave.user.firstname + " " + leave.user.lastname,
-        leaveStartDate: leave.start_date,
-        leaveEndDate: leave.end_date,
-        date: getCurrentDateTime()
+       requestingOfficerName: requesting_officer,
+        startDate: relieve.relieve_leave.start_date,
+        endDate: relieve.relieve_leave.end_date,
+        date: getCurrentDateTime(),
+        leaveYear: 2024,
+        leaveInstallment: 1,
+        approvalDate: relieve.acceptance_date
     };
 
+    // return res.status(200).json({
+    //     message: 'yoo',
+    //     dataDetails
+    // })
 
-    await new Promise<void>((resolve, reject) => {
-        res.render('operation', dataDetails, (err, html) => {
-          if (err) {
-           reject(err);
-       } else {
-              res.send(html)
-              resolve();
-            }
-         });
-       });    
+    try {
+        await new Promise<void>((resolve, reject) => {
+            res.render('operation', dataDetails, (err, html) => {
+              if (err) {
+               reject(err);
+           } else {
+                  res.send(html)
+                  resolve();
+                }
+             });
+           });    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'internal server error'
+        })
+    }
 }

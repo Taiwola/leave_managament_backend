@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application Approval</title>
+</head>
+<body>
+    <div>
+        <h2>Leave Application Approval</h2>
+        <p>
+            The information provided in support of the application of Mr./Mrs. <strong><%= requestingOfficerName %></strong> to proceed with his/her <%= leaveInstallment %> installment of year <%= leaveYear %> Annual leave starting from <strong><%= startDate %></strong> and with an end date of <strong><%= endDate %></strong>.
+            The application has been perused and found to be in tandem with the approved leave roster for the year.
+        </p>
+        <p>Please approve the request.</p>
+        <div>
+            <div>
+                Signature: <strong><img src="/signature.png" alt="Signature"></strong>
+            </div>
+            <div>
+                <p>Date: <strong><%= approvalDate %></strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

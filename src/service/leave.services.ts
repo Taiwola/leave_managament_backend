@@ -52,6 +52,7 @@ export const getOneLeave = async (id: string) => {
     
 };
 
+
 export const getAllLeave = async () => {
     const leave = await leaveRepo.find({
         relations: ['user', 'user.staff', 'relieving_officer'],

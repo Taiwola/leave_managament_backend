@@ -36,10 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRelieve = exports.updateRelieve = exports.findOneRelieve = exports.findAllRelieve = exports.findRelievingOfficer = exports.createRequest = void 0;
+exports.deleteRelieve = exports.updateRelieve = exports.getOneRelieveForLeave = exports.findOneRelieve = exports.findAllRelieve = exports.findRelievingOfficer = exports.createRequest = void 0;
 var data_source_1 = require("../database/data-source");
 var entity_1 = require("../database/entity/entity");
 var Relieving_officer_repo = data_source_1.connectionSource.getRepository(entity_1.Relieving_officer);
+// const addRelievingOfficerToLeave = async (Id: string) => {
+//         const reliveId = await findOneRelieve(Id);
+//         if (!reliveId) {
+//             return false
+//         };
+//         const findLeave = await getOneLeave(reliveId.relieve_leave.id);
+//         const updateLeave = await upda
+// }
 var createRequest = function (requestingUser, relieving_user, leave) { return __awaiter(void 0, void 0, void 0, function () {
     var officer, relieve;
     return __generator(this, function (_a) {
@@ -101,6 +109,20 @@ var findOneRelieve = function (id) { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 exports.findOneRelieve = findOneRelieve;
+var getOneRelieveForLeave = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var relieve;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, Relieving_officer_repo.findOne({
+                    where: { relieve_leave: { id: id } }
+                })];
+            case 1:
+                relieve = _a.sent();
+                return [2 /*return*/, relieve];
+        }
+    });
+}); };
+exports.getOneRelieveForLeave = getOneRelieveForLeave;
 var updateRelieve = function (relieveData, relieveId) { return __awaiter(void 0, void 0, void 0, function () {
     var currentDate, formattedDate, date, updateResult, updatedRelieveOfficer;
     return __generator(this, function (_a) {

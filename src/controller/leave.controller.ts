@@ -1,4 +1,4 @@
-import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject} from "../service";
+import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject, findOneRelieve, getOneRelieveForLeave, deleteRelieve} from "../service";
 import {Request, Response} from "express";
 import {findOne, validateUuid} from './user.controller'
 import { LeaveDetails } from "../interfaces/leave.interfaces";
@@ -119,23 +119,56 @@ export const get_one = async (req: Request, res: Response) => {
 
 
 export const delete_leave = async (req: Request, res: Response) => {
-    const {Id} = req.params;
+    const { Id } = req.params;
     const isValid = validateUuid(Id);
-    if (!isValid){
-        return res.status(400).send({message:"Invalid Id"});
+
+    if (!isValid) {
+        return res.status(400).json({ message: "Invalid Id" });
     }
+
     try {
-        const deletedLeave = await deleteLeave(Id);
-        return res.status(200).json({
-            message: "leave deleted successfully"
-        })   
+        const relieve = await getOneRelieveForLeave(Id);
+
+        if (!relieve) {
+            try {
+                await deleteLeave(Id);
+                return res.status(200).json({
+                    message: "Leave deleted successfully"
+                });
+            } catch (deleteLeaveError) {
+                console.log(deleteLeaveError);
+                return res.status(500).json({
+                    message: "Internal server error"
+                });
+            }
+        } else {
+            try {
+                const deleteRelieveResult = await deleteRelieve(relieve.id);
+                if (deleteRelieveResult.affected <= 0) {
+                    return res.status(404).json({
+                        message: "Leave not found or has already been deleted"
+                    });
+                }
+
+                await deleteLeave(Id);
+                return res.status(200).json({
+                    message: "Leave deleted successfully"
+                });
+            } catch (deleteError) {
+                console.log(deleteError);
+                return res.status(500).json({
+                    message: "Internal server error"
+                });
+            }
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            message: "internal server error"
-        })
+            message: "Internal server error"
+        });
     }
-}
+};
+
 
 
 export const updateStatus = async (req: Request, res: Response) => {

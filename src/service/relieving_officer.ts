@@ -2,12 +2,24 @@ import {connectionSource} from '../database/data-source';
 import {Leave, Relieving_officer} from "../database/entity/entity";
 import { User } from '../database/entity/user';
 import { RelieveInterface } from '../interfaces';
+import { getOneLeave } from './leave.services';
 
 
 
 
 const Relieving_officer_repo = connectionSource.getRepository(Relieving_officer);
 
+
+// const addRelievingOfficerToLeave = async (Id: string) => {
+//         const reliveId = await findOneRelieve(Id);
+//         if (!reliveId) {
+//             return false
+//         };
+
+//         const findLeave = await getOneLeave(reliveId.relieve_leave.id);
+
+//         const updateLeave = await upda
+// }
 
 export const createRequest = async (requestingUser: User, relieving_user: User, leave: Leave) => {
     const officer = Relieving_officer_repo.create({
@@ -48,6 +60,14 @@ export const findOneRelieve = async (id: string) => {
         })
 
         return relive;
+}
+
+export const getOneRelieveForLeave = async (id: string) => {
+    const relieve = await Relieving_officer_repo.findOne({
+        where: {relieve_leave: {id: id}}
+    })
+
+    return relieve;
 }
 
 
