@@ -12,6 +12,10 @@ export const create_leave = async (req: Request, res: Response) => {
     const user_id = req.user.id;
     const {title, description, startDate, endDate, number_of_days, leave_type, number_of_weeks}: LeaveDetails = req.body;
 
+    if (!title || !description || !startDate || !endDate || !number_of_days || !number_of_weeks || !leave_type) {
+        return res.status(400).json({message:"missing required inputs"});
+    }
+
     const isValid = validateUuid(user_id);
     if (!isValid){
         return res.status(400).json({message:"Invalid Id"});

@@ -47,6 +47,9 @@ var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 0:
                 user_id = req.user.id;
                 _a = req.body, title = _a.title, description = _a.description, startDate = _a.startDate, endDate = _a.endDate, number_of_days = _a.number_of_days, leave_type = _a.leave_type, number_of_weeks = _a.number_of_weeks;
+                if (!title || !description || !startDate || !endDate || !number_of_days || !number_of_weeks || !leave_type) {
+                    return [2 /*return*/, res.status(400).json({ message: "missing required inputs" })];
+                }
                 isValid = (0, user_controller_1.validateUuid)(user_id);
                 if (!isValid) {
                     return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
