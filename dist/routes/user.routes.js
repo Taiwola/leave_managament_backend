@@ -10,5 +10,6 @@ route.get('/user/all', authenticate_1.authentication, controller_1.getAll);
 route.get('/user/:Id', authenticate_1.authentication, controller_1.findOne);
 route.patch("/user/:Id", authenticate_1.authentication, controller_1.updateUser);
 route.patch("/user/password/:id", authenticate_1.authentication, controller_1.updatePassword);
+route.patch("/user/change/:Id", authenticate_1.authentication, controller_1.updateDeptm);
 route.delete("/user/:Id", authenticate_1.authentication, controller_1.deleteUser);
 //# sourceMappingURL=user.routes.js.map

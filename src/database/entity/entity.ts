@@ -34,9 +34,6 @@ export class Leave {
     description: string;
 
     @Column({type: "varchar", length: 255, nullable: false})
-    number_of_weeks: string;
-
-    @Column({type: "varchar", length: 255, nullable: false})
     number_of_days: string;
 
     @Column({type: "varchar", length: 255, nullable: false})

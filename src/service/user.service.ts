@@ -2,6 +2,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import {connectionSource} from '../database/data-source';
 import {User, UserStatus} from "../database/entity/user";
 import {UserDetails} from "../interfaces/index";
+import { Department } from '../database/entity/entity';
 
 const userRepo = connectionSource.getRepository(User);
 
@@ -45,6 +46,14 @@ const create = userRepo.create({
 export const update = async (id: string, data: Partial<UserDetails>):Promise<UpdateResult> => {
     let user = await userRepo.update(id, {
         ...data
+    });
+
+    return user;
+}
+
+export const updateDept = async(id: string, dept: Department) => {
+    const user = await userRepo.update(id, {
+        staff: dept
     });
 
     return user;

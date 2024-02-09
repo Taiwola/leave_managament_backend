@@ -1,18 +1,17 @@
-import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject, findOneRelieve, getOneRelieveForLeave, deleteRelieve} from "../service";
+import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject, findOneRelieve, getOneRelieveForLeave, deleteRelieve, createRequest, updateRelieve, addRelievingOfficer} from "../service";
 import {Request, Response} from "express";
 import {findOne, validateUuid} from './user.controller'
 import { LeaveDetails } from "../interfaces/leave.interfaces";
 import {Status, Type} from "../database/entity/entity";
-import puppeteer from "puppeteer";
 
 
 
 
 export const create_leave = async (req: Request, res: Response) => {
     const user_id = req.user.id;
-    const {title, description, startDate, endDate, number_of_days, leave_type, number_of_weeks}: LeaveDetails = req.body;
+    const {title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer}: LeaveDetails = req.body;
 
-    if (!title || !description || !startDate || !endDate || !number_of_days || !number_of_weeks || !leave_type) {
+    if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type) {
         return res.status(400).json({message:"missing required inputs"});
     }
 
@@ -27,7 +26,7 @@ if (!enumValues.includes(leave_type)) {
     return res.status(406).json({ message: "not a valid enum type" });
 }
 
-    if (!title || !description || !startDate || !endDate || !number_of_days || !number_of_weeks) {
+    if (!title || !description || !startDate || !endDate || !number_of_days) {
         return res.status(400).json({ error: 'Please provide all fields.' });
     }
 
@@ -37,21 +36,45 @@ if (!enumValues.includes(leave_type)) {
         return res.status(401).json({message: 'User not found'})
     }
 
+    const relieveOfficer = await getOne(relievingOfficer);
+
     const leave_data: LeaveDetails = {
         title,
         description,
         startDate,
         endDate,
         number_of_days,
-        number_of_weeks,
-        leave_type
+        leave_type,
+        relievingOfficer
     }
     
     try {
         const created = await createLeave(leave_data, userExist);
+        const data = {
+            requestingOfficerId: userExist,
+            relievingOfficerId: relieveOfficer,
+            leaveId: created,
+        }
+
+        const create_relieve = await createRequest(data.requestingOfficerId, data.relievingOfficerId, data.leaveId)
+        if (!create_relieve) {
+            return res.status(400).json({
+                message: "something went wrong"
+            });
+        }
+
+        const updateLeaveRelivingOfficer = await addRelievingOfficer(create_relieve, created.id);
+
+        if (updateLeaveRelivingOfficer.affected <= 0) {
+            return res.status(400).json({
+                message: "something went wrong"
+            });
+        }
+
         return res.status(200).json({
             message: "leave successfully created",
-            data: created
+            data: created,
+            relieve: create_relieve
         })
     } catch (error) {
         console.log(error);

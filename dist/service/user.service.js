@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePass = exports.del = exports.update = exports.createUser = exports.findAll = exports.getOne = exports.getUserEmail = void 0;
+exports.updatePass = exports.del = exports.updateDept = exports.update = exports.createUser = exports.findAll = exports.getOne = exports.getUserEmail = void 0;
 var data_source_1 = require("../database/data-source");
 var user_1 = require("../database/entity/user");
 var userRepo = data_source_1.connectionSource.getRepository(user_1.User);
@@ -124,6 +124,20 @@ var update = function (id, data) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 exports.update = update;
+var updateDept = function (id, dept) { return __awaiter(void 0, void 0, void 0, function () {
+    var user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, userRepo.update(id, {
+                    staff: dept
+                })];
+            case 1:
+                user = _a.sent();
+                return [2 /*return*/, user];
+        }
+    });
+}); };
+exports.updateDept = updateDept;
 var del = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var deleteUser;
     return __generator(this, function (_a) {

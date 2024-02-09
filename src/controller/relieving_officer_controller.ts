@@ -12,7 +12,7 @@ const validateUuid = (Id:string) => {
 export const createRelive = async (req: Request, res: Response) => {
     const {requestingOfficerId, leaveId, relievingOfficerId} = req.body;
 
-    if (!relievingOfficerId || !leaveId || requestingOfficerId!) {
+    if (!relievingOfficerId || !leaveId || !requestingOfficerId) {
         return res.status(404).json({
             success: false,
             message: 'missing inputs'

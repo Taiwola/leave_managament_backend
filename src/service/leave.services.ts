@@ -1,5 +1,5 @@
 import {connectionSource} from '../database/data-source';
-import {Leave, Status, Approval_type} from "../database/entity/entity";
+import {Leave, Status, Approval_type, Relieving_officer} from "../database/entity/entity";
 import { User } from '../database/entity/user';
 import { LeaveDetails } from '../interfaces/leave.interfaces';
 
@@ -14,7 +14,6 @@ export const createLeave = async (data: LeaveDetails, user: User) => {
         user: user,
         leave_type: data.leave_type,
         number_of_days: data.number_of_days,
-        number_of_weeks: data.number_of_weeks
     });
 
     const created = await leaveRepo.save(leave);
@@ -22,6 +21,14 @@ export const createLeave = async (data: LeaveDetails, user: User) => {
     return created
 };
 
+
+export const addRelievingOfficer = async (relieve:Relieving_officer, leaveId: string) => {
+    const result = await leaveRepo.update(leaveId, {
+        relieving_officer: relieve
+    });
+
+    return result;
+}
 
 export const getUserLeaves = async (user: User) => {
     const leave = await leaveRepo.find({

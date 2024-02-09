@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {findAll, getOne, update, del, getUserEmail, updatePass} from "../service";
+import {findAll, getOne, update, del, getUserEmail, updatePass, findOne_dept, updateDept} from "../service";
 import {validate as uuidValidate} from "uuid";
 import { UserDetails } from "../interfaces";
 import * as bcrypt from "bcryptjs";
@@ -133,5 +133,42 @@ export const updatePassword = async (req: Request, res: Response) => {
     })
   }catch(err){
     return res.status(500).json({message:'Internal server error'})
+  }
+}
+
+export const updateDeptm = async (req: Request, res: Response) => {
+  const {deptId} = req.body;
+  const {Id} = req.params;
+
+  if (!deptId) {
+    return res.status(400).json({
+      message: "input field missing"
+    });
+  };
+
+
+  const validId = uuidValidate(Id);
+  if (!validId) {
+    return res.status(400).json({message:"Invalid Id"})
+  };
+
+  try {
+     // find department
+  const dept = await findOne_dept(deptId);
+
+  if (!dept) {
+    return res.status(400).json({message:"request does not exist"})
+  }
+
+  const updateUserDept = await updateDept(Id, dept);
+ 
+  return res.status(200).json({
+    message: "Request successful"
+  })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "internal server error"
+    })
   }
 }

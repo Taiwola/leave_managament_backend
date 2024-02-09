@@ -59,7 +59,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.deleteUser = exports.updateUser = exports.findOne = exports.getAll = exports.validateUuid = void 0;
+exports.updateDeptm = exports.updatePassword = exports.deleteUser = exports.updateUser = exports.findOne = exports.getAll = exports.validateUuid = void 0;
 var service_1 = require("../service");
 var uuid_1 = require("uuid");
 var bcrypt = __importStar(require("bcryptjs"));
@@ -232,4 +232,48 @@ var updatePassword = function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.updatePassword = updatePassword;
+var updateDeptm = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var deptId, Id, validId, dept, updateUserDept, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                deptId = req.body.deptId;
+                Id = req.params.Id;
+                if (!deptId) {
+                    return [2 /*return*/, res.status(400).json({
+                            message: "input field missing"
+                        })];
+                }
+                ;
+                validId = (0, uuid_1.validate)(Id);
+                if (!validId) {
+                    return [2 /*return*/, res.status(400).json({ message: "Invalid Id" })];
+                }
+                ;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, (0, service_1.findOne_dept)(deptId)];
+            case 2:
+                dept = _a.sent();
+                if (!dept) {
+                    return [2 /*return*/, res.status(400).json({ message: "request does not exist" })];
+                }
+                return [4 /*yield*/, (0, service_1.updateDept)(Id, dept)];
+            case 3:
+                updateUserDept = _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        message: "Request successful"
+                    })];
+            case 4:
+                error_3 = _a.sent();
+                console.log(error_3);
+                return [2 /*return*/, res.status(500).json({
+                        message: "internal server error"
+                    })];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.updateDeptm = updateDeptm;
 //# sourceMappingURL=user.controller.js.map

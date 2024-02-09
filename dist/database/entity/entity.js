@@ -49,10 +49,6 @@ var Leave = /** @class */ (function () {
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
-    ], Leave.prototype, "number_of_weeks", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
-        __metadata("design:type", String)
     ], Leave.prototype, "number_of_days", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),

@@ -49,7 +49,7 @@ var createRelive = function (req, res) { return __awaiter(void 0, void 0, void 0
         switch (_b.label) {
             case 0:
                 _a = req.body, requestingOfficerId = _a.requestingOfficerId, leaveId = _a.leaveId, relievingOfficerId = _a.relievingOfficerId;
-                if (!relievingOfficerId || !leaveId || requestingOfficerId) {
+                if (!relievingOfficerId || !leaveId || !requestingOfficerId) {
                     return [2 /*return*/, res.status(404).json({
                             success: false,
                             message: 'missing inputs'
