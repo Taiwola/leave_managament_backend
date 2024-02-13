@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.operations_reject = exports.operations_approval = exports.department_reject = exports.department_approval = exports.addComment = exports.rejectOrApprove = exports.deleteLeave = exports.getAllLeave = exports.getOneLeave = exports.getAllPendingLeaves = exports.getUserLeaves = exports.createLeave = void 0;
+exports.operations_reject = exports.operations_approval = exports.department_reject = exports.department_approval = exports.addComment = exports.rejectOrApprove = exports.deleteLeave = exports.getAllLeave = exports.getOneLeave = exports.getAllPendingLeaves = exports.getUserLeaves = exports.addRelievingOfficer = exports.createLeave = void 0;
 var data_source_1 = require("../database/data-source");
 var entity_1 = require("../database/entity/entity");
 var leaveRepo = data_source_1.connectionSource.getRepository(entity_1.Leave);
@@ -62,6 +62,20 @@ var createLeave = function (data, user) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.createLeave = createLeave;
+var addRelievingOfficer = function (relieve, leaveId) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, leaveRepo.update(leaveId, {
+                    relieving_officer: relieve
+                })];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, result];
+        }
+    });
+}); };
+exports.addRelievingOfficer = addRelievingOfficer;
 var getUserLeaves = function (user) { return __awaiter(void 0, void 0, void 0, function () {
     var leave;
     return __generator(this, function (_a) {

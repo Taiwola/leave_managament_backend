@@ -20,4 +20,6 @@ __exportStar(require("./leave.controller"), exports);
 __exportStar(require("./department.controller"), exports);
 __exportStar(require("./relieving_officer_controller"), exports);
 __exportStar(require("./coverletter.controller"), exports);
+__exportStar(require("./entitled_leave.controller"), exports);
+__exportStar(require("./user_entitled_leave"), exports);
 //# sourceMappingURL=index.js.map

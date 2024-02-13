@@ -118,3 +118,35 @@ export class Relieving_officer {
     @Column({type: "varchar", nullable: true, length: 255})
     acceptance_date: string;
 }
+
+
+@Entity({name: "entitled leave"})
+export class Entitled_Leave {
+    @PrimaryGeneratedColumn("uuid")
+    id: string
+
+    @Column({type: "int", nullable: false})
+    gradeLevel: number
+
+    @Column({type: "int", nullable: false})
+    numberOfDays: number
+}
+
+@Entity({name: "user entitled leave"}) 
+export class User_Entitled_Leave {
+    @PrimaryGeneratedColumn("uuid")
+    id: string
+
+    @Column({type: "text", nullable: true})
+    userId: string;
+
+    @Column({type: "int", nullable: false})
+    currentYear: number
+
+    @Column({type: "int", nullable: false})
+    numberOfDays: number
+
+    @OneToOne(() => User, (user) => user.entitledLeave)
+    @JoinColumn()
+    user: User
+}

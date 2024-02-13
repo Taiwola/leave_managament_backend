@@ -18,4 +18,6 @@ __exportStar(require("./user.service"), exports);
 __exportStar(require("./leave.services"), exports);
 __exportStar(require("./department.service"), exports);
 __exportStar(require("./relieving_officer"), exports);
+__exportStar(require("./entitled_leave.service"), exports);
+__exportStar(require("./user_entitled_leave"), exports);
 //# sourceMappingURL=index.js.map

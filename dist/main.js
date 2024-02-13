@@ -72,6 +72,8 @@ var leave_routes_1 = require("./routes/leave.routes");
 var department_routes_1 = require("./routes/department.routes");
 var relieve_officer_routes_1 = require("./routes/relieve_officer_routes");
 var coverletter_route_1 = require("./routes/coverletter.route");
+var entitled_leave_routes_1 = require("./routes/entitled_leave.routes");
+var user_entitled_leave_routes_1 = require("./routes/user_entitled_leave.routes");
 app.get('/home', function (req, res) {
     var url = req.url;
     res.status(200).json({
@@ -85,6 +87,8 @@ app.use('/api/', leave_routes_1.leaveRouter);
 app.use("/api/", department_routes_1.deptRoute);
 app.use('/api/', relieve_officer_routes_1.relieveRoute);
 app.use('/api/', coverletter_route_1.coverletterRoute);
+app.use('/api/', entitled_leave_routes_1.entitled_leaveRoute);
+app.use('/api/', user_entitled_leave_routes_1.userEntitledLeaveRoutes);
 //invalid routes
 // app.all("*", (req, res) => {
 //   res.status(404);

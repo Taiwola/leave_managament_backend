@@ -63,6 +63,14 @@ var User = /** @class */ (function () {
         __metadata("design:type", String)
     ], User.prototype, "signature", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], User.prototype, "gradeLevel", void 0);
+    __decorate([
+        (0, typeorm_1.OneToOne)(function () { return entity_1.User_Entitled_Leave; }, function (entitled_leave) { return entitled_leave.user; }),
+        __metadata("design:type", entity_1.User_Entitled_Leave)
+    ], User.prototype, "entitledLeave", void 0);
+    __decorate([
         (0, typeorm_1.OneToMany)(function () { return entity_1.Relieving_officer; }, function (relieving_officer) { return relieving_officer.relieving_officer; }),
         __metadata("design:type", entity_1.Relieving_officer)
     ], User.prototype, "relieving_officer", void 0);

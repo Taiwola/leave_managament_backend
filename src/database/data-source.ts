@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entity/user";
-import {Leave, Department, Relieving_officer} from "./entity/entity";
+import {Leave, Department, Relieving_officer, User_Entitled_Leave, Entitled_Leave} from "./entity/entity";
 dotenv.config(); // Load environment variables from a .env file
 
 export const connectionSource = new DataSource({
@@ -14,7 +14,7 @@ export const connectionSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true, // In development, you can set this to false
   logging: false,
-  entities: [User, Leave, Department, Relieving_officer],
+  entities: [User, Leave, Department, Relieving_officer, User_Entitled_Leave, Entitled_Leave],
   migrations: [], // Configure migrations if needed
   subscribers: [], // Configure subscribers if needed
   migrationsTableName: "custom_migration_table",

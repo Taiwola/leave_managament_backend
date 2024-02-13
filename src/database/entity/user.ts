@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,OneToMany, ManyToOne, OneToOne, JoinColumn} from "typeorm";
-import { Department, Leave, Relieving_officer } from "./entity";
+import { Department, Leave, Relieving_officer, User_Entitled_Leave } from "./entity";
 
 
 export enum UserStatus {
@@ -40,6 +40,12 @@ export class User {
 
     @Column({type:"text", nullable:true})
     signature: string
+
+    @Column({type: "int", nullable: true})
+    gradeLevel: number
+
+    @OneToOne(() => User_Entitled_Leave , (entitled_leave) => entitled_leave.user)
+    entitledLeave: User_Entitled_Leave
 
     @OneToMany(() => Relieving_officer, (relieving_officer) => relieving_officer.relieving_officer)
     relieving_officer: Relieving_officer

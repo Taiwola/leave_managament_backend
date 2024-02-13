@@ -1,4 +1,4 @@
-import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject, findOneRelieve, getOneRelieveForLeave, deleteRelieve, createRequest, updateRelieve, addRelievingOfficer} from "../service";
+import {getOne, createLeave, getAllLeave, deleteLeave, rejectOrApprove, getUserLeaves, getOneLeave, getAllPendingLeaves, addComment, department_approval, department_reject, operations_approval, operations_reject, findOneRelieve, getOneRelieveForLeave, deleteRelieve, createRequest, updateRelieve, addRelievingOfficer, getOneByUser, updateEntitledUserLeave} from "../service";
 import {Request, Response} from "express";
 import {findOne, validateUuid} from './user.controller'
 import { LeaveDetails } from "../interfaces/leave.interfaces";
@@ -11,7 +11,7 @@ export const create_leave = async (req: Request, res: Response) => {
     const user_id = req.user.id;
     const {title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer}: LeaveDetails = req.body;
 
-    if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type) {
+    if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer) {
         return res.status(400).json({message:"missing required inputs"});
     }
 
@@ -47,6 +47,15 @@ if (!enumValues.includes(leave_type)) {
         leave_type,
         relievingOfficer
     }
+
+    const entitled = await getOneByUser(userExist);
+    if (!entitled) {
+        return res.status(400).json({
+            message: "Request does not exist"
+        })
+    }
+
+    console.log(entitled);
     
     try {
         const created = await createLeave(leave_data, userExist);
@@ -63,13 +72,11 @@ if (!enumValues.includes(leave_type)) {
             });
         }
 
-        const updateLeaveRelivingOfficer = await addRelievingOfficer(create_relieve, created.id);
-
-        if (updateLeaveRelivingOfficer.affected <= 0) {
-            return res.status(400).json({
-                message: "something went wrong"
-            });
-        }
+        const updatedNumbOfDays = entitled.numberOfDays - parseInt(number_of_days);
+        console.log(updatedNumbOfDays);
+        console.log(parseInt(number_of_days));
+        console.log(entitled.numberOfDays);
+        const updatedEntitled = await updateEntitledUserLeave(entitled.id, updatedNumbOfDays);
 
         return res.status(200).json({
             message: "leave successfully created",

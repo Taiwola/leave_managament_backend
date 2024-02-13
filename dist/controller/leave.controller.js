@@ -41,13 +41,13 @@ var service_1 = require("../service");
 var user_controller_1 = require("./user.controller");
 var entity_1 = require("../database/entity/entity");
 var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, _a, title, description, startDate, endDate, number_of_days, leave_type, isValid, enumValues, userExist, leave_data, created, error_1;
+    var user_id, _a, title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer, isValid, enumValues, userExist, relieveOfficer, leave_data, entitled, created, data, create_relieve, updatedNumbOfDays, updatedEntitled, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 user_id = req.user.id;
-                _a = req.body, title = _a.title, description = _a.description, startDate = _a.startDate, endDate = _a.endDate, number_of_days = _a.number_of_days, leave_type = _a.leave_type;
-                if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type) {
+                _a = req.body, title = _a.title, description = _a.description, startDate = _a.startDate, endDate = _a.endDate, number_of_days = _a.number_of_days, leave_type = _a.leave_type, relievingOfficer = _a.relievingOfficer;
+                if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer) {
                     return [2 /*return*/, res.status(400).json({ message: "missing required inputs" })];
                 }
                 isValid = (0, user_controller_1.validateUuid)(user_id);
@@ -67,29 +67,63 @@ var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0
                 if (!userExist) {
                     return [2 /*return*/, res.status(401).json({ message: 'User not found' })];
                 }
+                return [4 /*yield*/, (0, service_1.getOne)(relievingOfficer)];
+            case 2:
+                relieveOfficer = _b.sent();
                 leave_data = {
                     title: title,
                     description: description,
                     startDate: startDate,
                     endDate: endDate,
                     number_of_days: number_of_days,
-                    leave_type: leave_type
+                    leave_type: leave_type,
+                    relievingOfficer: relievingOfficer
                 };
-                _b.label = 2;
-            case 2:
-                _b.trys.push([2, 4, , 5]);
-                return [4 /*yield*/, (0, service_1.createLeave)(leave_data, userExist)];
+                return [4 /*yield*/, (0, service_1.getOneByUser)(userExist)];
             case 3:
+                entitled = _b.sent();
+                if (!entitled) {
+                    return [2 /*return*/, res.status(400).json({
+                            message: "Request does not exist"
+                        })];
+                }
+                console.log(entitled);
+                _b.label = 4;
+            case 4:
+                _b.trys.push([4, 8, , 9]);
+                return [4 /*yield*/, (0, service_1.createLeave)(leave_data, userExist)];
+            case 5:
                 created = _b.sent();
+                data = {
+                    requestingOfficerId: userExist,
+                    relievingOfficerId: relieveOfficer,
+                    leaveId: created,
+                };
+                return [4 /*yield*/, (0, service_1.createRequest)(data.requestingOfficerId, data.relievingOfficerId, data.leaveId)];
+            case 6:
+                create_relieve = _b.sent();
+                if (!create_relieve) {
+                    return [2 /*return*/, res.status(400).json({
+                            message: "something went wrong"
+                        })];
+                }
+                updatedNumbOfDays = entitled.numberOfDays - parseInt(number_of_days);
+                console.log(updatedNumbOfDays);
+                console.log(parseInt(number_of_days));
+                console.log(entitled.numberOfDays);
+                return [4 /*yield*/, (0, service_1.updateEntitledUserLeave)(entitled.id, updatedNumbOfDays)];
+            case 7:
+                updatedEntitled = _b.sent();
                 return [2 /*return*/, res.status(200).json({
                         message: "leave successfully created",
-                        data: created
+                        data: created,
+                        relieve: create_relieve
                     })];
-            case 4:
+            case 8:
                 error_1 = _b.sent();
                 console.log(error_1);
                 return [2 /*return*/, res.status(500).json({ msg: 'Error creating a new leave request' })];
-            case 5: return [2 /*return*/];
+            case 9: return [2 /*return*/];
         }
     });
 }); };

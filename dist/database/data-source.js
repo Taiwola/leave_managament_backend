@@ -55,7 +55,7 @@ exports.connectionSource = new typeorm_1.DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: [user_1.User, entity_1.Leave, entity_1.Department, entity_1.Relieving_officer],
+    entities: [user_1.User, entity_1.Leave, entity_1.Department, entity_1.Relieving_officer, entity_1.User_Entitled_Leave, entity_1.Entitled_Leave],
     migrations: [],
     subscribers: [],
     migrationsTableName: "custom_migration_table",

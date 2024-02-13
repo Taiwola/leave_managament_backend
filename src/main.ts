@@ -50,8 +50,10 @@ import {userRoute} from './routes/user.routes';
 import {authRoute} from "./routes/auth.routes";
 import {leaveRouter} from "./routes/leave.routes";
 import {deptRoute} from "./routes/department.routes";
-import {relieveRoute} from "./routes/relieve_officer_routes"
-import {coverletterRoute} from "./routes/coverletter.route"
+import {relieveRoute} from "./routes/relieve_officer_routes";
+import {coverletterRoute} from "./routes/coverletter.route";
+import { entitled_leaveRoute } from "./routes/entitled_leave.routes";
+import {userEntitledLeaveRoutes} from "./routes/user_entitled_leave.routes"
 
 app.get('/home', (req, res) => {
   const url = req.url;
@@ -68,6 +70,8 @@ app.use('/api/', leaveRouter);
 app.use("/api/", deptRoute);
 app.use('/api/', relieveRoute);
 app.use('/api/', coverletterRoute);
+app.use('/api/', entitled_leaveRoute);
+app.use('/api/', userEntitledLeaveRoutes);
 
 
 

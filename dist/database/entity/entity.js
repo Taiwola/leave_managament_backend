@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Relieving_officer = exports.Department = exports.Leave = exports.Approval_type = exports.Type = exports.Status = void 0;
+exports.User_Entitled_Leave = exports.Entitled_Leave = exports.Relieving_officer = exports.Department = exports.Leave = exports.Approval_type = exports.Type = exports.Status = void 0;
 var typeorm_1 = require("typeorm");
 var user_1 = require("./user");
 var Status;
@@ -174,4 +174,55 @@ var Relieving_officer = /** @class */ (function () {
     return Relieving_officer;
 }());
 exports.Relieving_officer = Relieving_officer;
+var Entitled_Leave = /** @class */ (function () {
+    function Entitled_Leave() {
+    }
+    __decorate([
+        (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+        __metadata("design:type", String)
+    ], Entitled_Leave.prototype, "id", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Entitled_Leave.prototype, "gradeLevel", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Entitled_Leave.prototype, "numberOfDays", void 0);
+    Entitled_Leave = __decorate([
+        (0, typeorm_1.Entity)({ name: "entitled leave" })
+    ], Entitled_Leave);
+    return Entitled_Leave;
+}());
+exports.Entitled_Leave = Entitled_Leave;
+var User_Entitled_Leave = /** @class */ (function () {
+    function User_Entitled_Leave() {
+    }
+    __decorate([
+        (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+        __metadata("design:type", String)
+    ], User_Entitled_Leave.prototype, "id", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "text", nullable: true }),
+        __metadata("design:type", String)
+    ], User_Entitled_Leave.prototype, "userId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], User_Entitled_Leave.prototype, "currentYear", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], User_Entitled_Leave.prototype, "numberOfDays", void 0);
+    __decorate([
+        (0, typeorm_1.OneToOne)(function () { return user_1.User; }, function (user) { return user.entitledLeave; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_1.User)
+    ], User_Entitled_Leave.prototype, "user", void 0);
+    User_Entitled_Leave = __decorate([
+        (0, typeorm_1.Entity)({ name: "user entitled leave" })
+    ], User_Entitled_Leave);
+    return User_Entitled_Leave;
+}());
+exports.User_Entitled_Leave = User_Entitled_Leave;
 //# sourceMappingURL=entity.js.map
