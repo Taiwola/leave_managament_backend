@@ -135,14 +135,13 @@ export const get_one_user_entitled_leave = async (req: Request, res: Response) =
 export const get_by_user = async (req: Request, res: Response) => {
     try {
         const usrId = req.user.id;
-        console.log(usrId);
 
         const user = await getOne(usrId);
     
         const getEntitled = await getOneByUser(user);
     
         return res.status(200).json({
-            getEntitled
+            data: getEntitled
         })
     } catch (error) {
         console.log(error);

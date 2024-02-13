@@ -9,9 +9,9 @@ import {Status, Type} from "../database/entity/entity";
 
 export const create_leave = async (req: Request, res: Response) => {
     const user_id = req.user.id;
-    const {title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer}: LeaveDetails = req.body;
+    const {title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer, resumptionDate}: LeaveDetails = req.body;
 
-    if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer) {
+    if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer || !resumptionDate) {
         return res.status(400).json({message:"missing required inputs"});
     }
 
@@ -45,7 +45,8 @@ if (!enumValues.includes(leave_type)) {
         endDate,
         number_of_days,
         leave_type,
-        relievingOfficer
+        relievingOfficer,
+        resumptionDate
     }
 
     const entitled = await getOneByUser(userExist);
@@ -55,7 +56,11 @@ if (!enumValues.includes(leave_type)) {
         })
     }
 
-    console.log(entitled);
+    if (parseInt(number_of_days) > entitled.numberOfDays) {
+        return res.status(400).json({
+            message: "you have exceeded the amount of leave for the year"
+        })
+    }
     
     try {
         const created = await createLeave(leave_data, userExist);
@@ -71,13 +76,6 @@ if (!enumValues.includes(leave_type)) {
                 message: "something went wrong"
             });
         }
-
-        const updatedNumbOfDays = entitled.numberOfDays - parseInt(number_of_days);
-        console.log(updatedNumbOfDays);
-        console.log(parseInt(number_of_days));
-        console.log(entitled.numberOfDays);
-        const updatedEntitled = await updateEntitledUserLeave(entitled.id, updatedNumbOfDays);
-
         return res.status(200).json({
             message: "leave successfully created",
             data: created,

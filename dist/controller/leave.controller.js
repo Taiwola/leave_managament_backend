@@ -41,13 +41,13 @@ var service_1 = require("../service");
 var user_controller_1 = require("./user.controller");
 var entity_1 = require("../database/entity/entity");
 var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user_id, _a, title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer, isValid, enumValues, userExist, relieveOfficer, leave_data, entitled, created, data, create_relieve, updatedNumbOfDays, updatedEntitled, error_1;
+    var user_id, _a, title, description, startDate, endDate, number_of_days, leave_type, relievingOfficer, resumptionDate, isValid, enumValues, userExist, relieveOfficer, leave_data, entitled, created, data, create_relieve, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 user_id = req.user.id;
-                _a = req.body, title = _a.title, description = _a.description, startDate = _a.startDate, endDate = _a.endDate, number_of_days = _a.number_of_days, leave_type = _a.leave_type, relievingOfficer = _a.relievingOfficer;
-                if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer) {
+                _a = req.body, title = _a.title, description = _a.description, startDate = _a.startDate, endDate = _a.endDate, number_of_days = _a.number_of_days, leave_type = _a.leave_type, relievingOfficer = _a.relievingOfficer, resumptionDate = _a.resumptionDate;
+                if (!title || !description || !startDate || !endDate || !number_of_days || !leave_type || !relievingOfficer || !resumptionDate) {
                     return [2 /*return*/, res.status(400).json({ message: "missing required inputs" })];
                 }
                 isValid = (0, user_controller_1.validateUuid)(user_id);
@@ -77,7 +77,8 @@ var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0
                     endDate: endDate,
                     number_of_days: number_of_days,
                     leave_type: leave_type,
-                    relievingOfficer: relievingOfficer
+                    relievingOfficer: relievingOfficer,
+                    resumptionDate: resumptionDate
                 };
                 return [4 /*yield*/, (0, service_1.getOneByUser)(userExist)];
             case 3:
@@ -87,10 +88,14 @@ var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0
                             message: "Request does not exist"
                         })];
                 }
-                console.log(entitled);
+                if (parseInt(number_of_days) > entitled.numberOfDays) {
+                    return [2 /*return*/, res.status(400).json({
+                            message: "you have exceeded the amount of leave for the year"
+                        })];
+                }
                 _b.label = 4;
             case 4:
-                _b.trys.push([4, 8, , 9]);
+                _b.trys.push([4, 7, , 8]);
                 return [4 /*yield*/, (0, service_1.createLeave)(leave_data, userExist)];
             case 5:
                 created = _b.sent();
@@ -107,23 +112,16 @@ var create_leave = function (req, res) { return __awaiter(void 0, void 0, void 0
                             message: "something went wrong"
                         })];
                 }
-                updatedNumbOfDays = entitled.numberOfDays - parseInt(number_of_days);
-                console.log(updatedNumbOfDays);
-                console.log(parseInt(number_of_days));
-                console.log(entitled.numberOfDays);
-                return [4 /*yield*/, (0, service_1.updateEntitledUserLeave)(entitled.id, updatedNumbOfDays)];
-            case 7:
-                updatedEntitled = _b.sent();
                 return [2 /*return*/, res.status(200).json({
                         message: "leave successfully created",
                         data: created,
                         relieve: create_relieve
                     })];
-            case 8:
+            case 7:
                 error_1 = _b.sent();
                 console.log(error_1);
                 return [2 /*return*/, res.status(500).json({ msg: 'Error creating a new leave request' })];
-            case 9: return [2 /*return*/];
+            case 8: return [2 /*return*/];
         }
     });
 }); };

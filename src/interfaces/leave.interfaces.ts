@@ -8,5 +8,6 @@ export interface LeaveDetails {
     startDate: string,
     endDate: string,
     leave_type: Type,
-    relievingOfficer: string
+    relievingOfficer: string,
+    resumptionDate: string
 }

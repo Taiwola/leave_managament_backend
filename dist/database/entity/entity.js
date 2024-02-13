@@ -59,6 +59,10 @@ var Leave = /** @class */ (function () {
         __metadata("design:type", String)
     ], Leave.prototype, "end_date", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
+        __metadata("design:type", String)
+    ], Leave.prototype, "resumptionDate", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "enum", enum: Approval_type, nullable: true, default: Approval_type["to be reviewed"] }),
         __metadata("design:type", String)
     ], Leave.prototype, "departmental_approval", void 0);

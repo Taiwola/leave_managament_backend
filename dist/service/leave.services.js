@@ -53,6 +53,7 @@ var createLeave = function (data, user) { return __awaiter(void 0, void 0, void 
                     user: user,
                     leave_type: data.leave_type,
                     number_of_days: data.number_of_days,
+                    resumptionDate: data.resumptionDate
                 });
                 return [4 /*yield*/, leaveRepo.save(leave)];
             case 1:

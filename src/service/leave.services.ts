@@ -14,6 +14,7 @@ export const createLeave = async (data: LeaveDetails, user: User) => {
         user: user,
         leave_type: data.leave_type,
         number_of_days: data.number_of_days,
+        resumptionDate: data.resumptionDate
     });
 
     const created = await leaveRepo.save(leave);

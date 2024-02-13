@@ -198,7 +198,6 @@ var get_by_user = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 0:
                 _a.trys.push([0, 3, , 4]);
                 usrId = req.user.id;
-                console.log(usrId);
                 return [4 /*yield*/, (0, service_1.getOne)(usrId)];
             case 1:
                 user = _a.sent();
@@ -206,7 +205,7 @@ var get_by_user = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 2:
                 getEntitled = _a.sent();
                 return [2 /*return*/, res.status(200).json({
-                        getEntitled: getEntitled
+                        data: getEntitled
                     })];
             case 3:
                 error_3 = _a.sent();

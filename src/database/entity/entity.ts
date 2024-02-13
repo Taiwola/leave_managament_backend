@@ -42,6 +42,9 @@ export class Leave {
     @Column({type: "varchar", length: 255 ,nullable: false})
     end_date: string;
 
+    @Column({type: "varchar", length: 255 ,nullable: false})
+    resumptionDate: string;
+
     @Column({type: "enum",  enum: Approval_type,nullable: true, default: Approval_type["to be reviewed"]})
     departmental_approval: Approval_type;
 
