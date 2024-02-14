@@ -45,7 +45,11 @@ const create = userRepo.create({
 
 export const update = async (id: string, data: Partial<UserDetails>):Promise<UpdateResult> => {
     let user = await userRepo.update(id, {
-        ...data
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        status: data.status,
+        gradeLevel: data.gradeLevel
     });
 
     return user;

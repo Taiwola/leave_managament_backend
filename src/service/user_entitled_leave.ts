@@ -10,7 +10,8 @@ export const createEntitledUserLeave = async (currentYear: number, user: User, n
     const userEntitled = entitledLeaveRepo.create({
         currentYear: new Date().getFullYear(),
         numberOfDays: numberOfDays,
-        user: user
+        user: user,
+        gradeLevel: user.gradeLevel
     });
 
     const entitled = await entitledLeaveRepo.save(userEntitled);
@@ -43,10 +44,11 @@ export const getOneByUser = async (user: User) => {
     return  entitled;
 }
 
-export const updateEntitledUserLeave = async (Id: string,  updatedNumberOfDays?: number , updatedYear?: number) => {
+export const updateEntitledUserLeave = async (Id: string,  updatedNumberOfDays?: number , gradedlevel?:number ,updatedYear?: number) => {
     const entitled = await entitledLeaveRepo.update(Id, {
         numberOfDays : updatedNumberOfDays,
         currentYear : updatedYear,
+        gradeLevel: gradedlevel
     });
     return entitled;
 };

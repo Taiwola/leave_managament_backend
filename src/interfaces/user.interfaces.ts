@@ -6,5 +6,5 @@ export interface UserDetails {
     email: string,
     password: string,
     status: UserStatus,
-
+    gradeLevel: number
 }

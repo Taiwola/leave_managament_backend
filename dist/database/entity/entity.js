@@ -215,6 +215,10 @@ var User_Entitled_Leave = /** @class */ (function () {
         __metadata("design:type", Number)
     ], User_Entitled_Leave.prototype, "currentYear", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], User_Entitled_Leave.prototype, "gradeLevel", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
     ], User_Entitled_Leave.prototype, "numberOfDays", void 0);

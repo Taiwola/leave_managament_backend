@@ -123,7 +123,7 @@ exports.get_all_user_entitled_leave = get_all_user_entitled_leave;
 //     }
 // };
 var get_one_user_entitled_leave = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Id, userId, validId, user, entitled, current, entitledNumbOfDays, updateUserEntitled, updatedEntitled, error_2;
+    var Id, userId, validId, user, entitled, current, entitledNumbOfDays, updateUserEntitled, updatedEntitled, error_2, updateUserEntitled, updatedEntitled, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -148,13 +148,14 @@ var get_one_user_entitled_leave = function (req, res) { return __awaiter(void 0,
             case 2:
                 entitled = _a.sent();
                 current = new Date().getFullYear();
-                if (!(entitled.currentYear !== current)) return [3 /*break*/, 9];
-                _a.label = 3;
-            case 3:
-                _a.trys.push([3, 7, , 8]);
                 return [4 /*yield*/, (0, service_1.getEntitledLeaveByGradeLevel)(user.gradeLevel)];
-            case 4:
+            case 3:
                 entitledNumbOfDays = _a.sent();
+                console.log(entitledNumbOfDays);
+                if (!(entitled.currentYear !== current)) return [3 /*break*/, 9];
+                _a.label = 4;
+            case 4:
+                _a.trys.push([4, 7, , 8]);
                 return [4 /*yield*/, (0, service_1.updateEntitledUserLeave)(Id, entitledNumbOfDays.numberOfDays, current)];
             case 5:
                 updateUserEntitled = _a.sent();
@@ -171,8 +172,30 @@ var get_one_user_entitled_leave = function (req, res) { return __awaiter(void 0,
                 return [2 /*return*/, res.status(500).json({
                         message: "internal server error"
                     })];
-            case 8: return [3 /*break*/, 10];
+            case 8: return [3 /*break*/, 16];
             case 9:
+                if (!(entitled.numberOfDays !== entitledNumbOfDays.numberOfDays)) return [3 /*break*/, 15];
+                _a.label = 10;
+            case 10:
+                _a.trys.push([10, 13, , 14]);
+                return [4 /*yield*/, (0, service_1.updateEntitledUserLeave)(Id, entitledNumbOfDays.numberOfDays, current)];
+            case 11:
+                updateUserEntitled = _a.sent();
+                return [4 /*yield*/, (0, service_1.getOneUserEntitledLeave)(Id)];
+            case 12:
+                updatedEntitled = _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        message: "Number of days resetted",
+                        data: updatedEntitled
+                    })];
+            case 13:
+                error_3 = _a.sent();
+                console.log(error_3);
+                return [2 /*return*/, res.status(500).json({
+                        message: "internal server error"
+                    })];
+            case 14: return [3 /*break*/, 16];
+            case 15:
                 try {
                     return [2 /*return*/, res.status(200).json({
                             message: "Request successful",
@@ -185,41 +208,60 @@ var get_one_user_entitled_leave = function (req, res) { return __awaiter(void 0,
                             message: "internal server error"
                         })];
                 }
-                _a.label = 10;
-            case 10: return [2 /*return*/];
+                _a.label = 16;
+            case 16: return [2 /*return*/];
         }
     });
 }); };
 exports.get_one_user_entitled_leave = get_one_user_entitled_leave;
 var get_by_user = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var usrId, user, getEntitled, error_3;
+    var usrId, user, currentYear, entitledNumbOfDays, entitled, updatedEntitled, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 7, , 8]);
                 usrId = req.user.id;
                 return [4 /*yield*/, (0, service_1.getOne)(usrId)];
             case 1:
                 user = _a.sent();
-                return [4 /*yield*/, (0, service_1.getOneByUser)(user)];
+                if (!user) {
+                    return [2 /*return*/, res.status(404).json({
+                            message: "User not found"
+                        })];
+                }
+                currentYear = new Date().getFullYear();
+                return [4 /*yield*/, (0, service_1.getEntitledLeaveByGradeLevel)(user.gradeLevel)];
             case 2:
-                getEntitled = _a.sent();
-                return [2 /*return*/, res.status(200).json({
-                        data: getEntitled
-                    })];
+                entitledNumbOfDays = _a.sent();
+                return [4 /*yield*/, (0, service_1.getOneByUser)(user)];
             case 3:
-                error_3 = _a.sent();
-                console.log(error_3);
-                return [2 /*return*/, res.status(500).json({
-                        message: "internal server error"
+                entitled = _a.sent();
+                if (!(entitled.currentYear !== currentYear || entitled.gradeLevel !== entitledNumbOfDays.gradeLevel)) return [3 /*break*/, 5];
+                return [4 /*yield*/, (0, service_1.updateEntitledUserLeave)(entitled.id, entitledNumbOfDays.numberOfDays, entitledNumbOfDays.gradeLevel, currentYear)];
+            case 4:
+                updatedEntitled = _a.sent();
+                return [2 /*return*/, res.status(200).json({
+                        message: "Number of days reset",
+                        data: updatedEntitled
                     })];
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/, res.status(200).json({
+                    message: "Request successful",
+                    data: entitled
+                })];
+            case 6: return [3 /*break*/, 8];
+            case 7:
+                error_4 = _a.sent();
+                console.error("Error:", error_4);
+                return [2 /*return*/, res.status(500).json({
+                        message: "Internal server error"
+                    })];
+            case 8: return [2 /*return*/];
         }
     });
 }); };
 exports.get_by_user = get_by_user;
 var deleteUserEntitledLeave = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Id, validId, del, error_4;
+    var Id, validId, del, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -241,8 +283,8 @@ var deleteUserEntitledLeave = function (req, res) { return __awaiter(void 0, voi
                         message: "Request successful"
                     })];
             case 3:
-                error_4 = _a.sent();
-                console.log(error_4);
+                error_5 = _a.sent();
+                console.log(error_5);
                 return [2 /*return*/, res.status(500).json({
                         message: "Internal server error"
                     })];

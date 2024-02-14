@@ -89,6 +89,7 @@ var registerUser = function (req, res) { return __awaiter(void 0, void 0, void 0
                         email: email,
                         password: hashPassword,
                         status: status,
+                        gradeLevel: 0
                     })];
             case 4:
                 newUser = _b.sent();

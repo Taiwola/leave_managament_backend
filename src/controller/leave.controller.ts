@@ -211,6 +211,8 @@ export const updateStatus = async (req: Request, res: Response) => {
     }
     const {status} = req.body;
 
+    // TODO: WHEN LEAVE IS APPROVED, REMOVE THE AMOUNT OF DAYS REMAINING FROM THE USER ENTITLED LEAVE TABLE
+
     try {
         const updatedStatus = await rejectOrApprove(Id, status);
         return res.status(200).json({

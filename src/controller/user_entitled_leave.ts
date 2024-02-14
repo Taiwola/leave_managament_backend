@@ -98,10 +98,11 @@ export const get_one_user_entitled_leave = async (req: Request, res: Response) =
 
     const entitled = await getOneUserEntitledLeave(Id);
     const current = new Date().getFullYear();
+    const entitledNumbOfDays = await getEntitledLeaveByGradeLevel(user.gradeLevel);
+    console.log(entitledNumbOfDays);
 
     if (entitled.currentYear !== current) {
         try {
-            const entitledNumbOfDays = await getEntitledLeaveByGradeLevel(user.gradeLevel);
             const updateUserEntitled = await updateEntitledUserLeave(Id, entitledNumbOfDays.numberOfDays ,current );
             const updatedEntitled = await getOneUserEntitledLeave(Id);
 
@@ -115,7 +116,24 @@ export const get_one_user_entitled_leave = async (req: Request, res: Response) =
                 message: "internal server error"
             })
         }
-    } else {
+    } else if (entitled.numberOfDays !== entitledNumbOfDays.numberOfDays) {
+        try {
+            const updateUserEntitled = await updateEntitledUserLeave(Id, entitledNumbOfDays.numberOfDays ,current );
+            const updatedEntitled = await getOneUserEntitledLeave(Id);
+
+            return res.status(200).json({
+                message: "Number of days resetted",
+                data: updatedEntitled
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                message: "internal server error"
+            })
+        }
+    }
+    
+    else {
         try {
             return res.status(200).json({
                 message: "Request successful",
@@ -137,17 +155,39 @@ export const get_by_user = async (req: Request, res: Response) => {
         const usrId = req.user.id;
 
         const user = await getOne(usrId);
-    
-        const getEntitled = await getOneByUser(user);
-    
-        return res.status(200).json({
-            data: getEntitled
-        })
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            }); 
+        }
+
+        const currentYear = new Date().getFullYear();
+        const entitledNumbOfDays = await getEntitledLeaveByGradeLevel(user.gradeLevel);
+        const entitled = await getOneByUser(user);
+        // console.log({
+        //     "userGradeLevel": user.gradeLevel,
+        //     "entitled gradedlevel": entitledNumbOfDays.gradeLevel,
+        //     "entitled": entitled
+        // })
+        
+        if (entitled.currentYear !== currentYear || entitled.gradeLevel !== entitledNumbOfDays.gradeLevel) {
+            const updatedEntitled = await updateEntitledUserLeave(entitled.id, entitledNumbOfDays.numberOfDays, entitledNumbOfDays.gradeLevel ,currentYear);
+
+            return res.status(200).json({
+                message: "Number of days reset",
+                data: updatedEntitled
+            });
+        } else {
+            return res.status(200).json({
+                message: "Request successful",
+                data: entitled
+            });
+        }
     } catch (error) {
-        console.log(error);
+        console.error("Error:", error);
         return res.status(500).json({
-            message: "internal server error"
-        })
+            message: "Internal server error"
+        });
     }
 }
 

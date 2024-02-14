@@ -119,7 +119,7 @@ var findOne = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.findOne = findOne;
 var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Id, validUuid, _a, firstname, lastname, email, status, enumValues, user, updatedUser, error_1;
+    var Id, validUuid, _a, firstname, lastname, email, status, gradeLevel, enumValues, user, updatedUser, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -128,26 +128,31 @@ var updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 if (!validUuid) {
                     return [2 /*return*/, res.status(400).send({ error: "Invalid Id" })];
                 }
-                _a = req.body, firstname = _a.firstname, lastname = _a.lastname, email = _a.email, status = _a.status;
+                _a = req.body, firstname = _a.firstname, lastname = _a.lastname, email = _a.email, status = _a.status, gradeLevel = _a.gradeLevel;
                 enumValues = Object.values(user_1.UserStatus);
-                if (!enumValues.includes(status)) {
-                    return [2 /*return*/, res.status(406).json({ message: "not a valid enum type" })];
+                if (status) {
+                    if (!enumValues.includes(status)) {
+                        console.log("here");
+                        return [2 /*return*/, res.status(406).json({ message: "not a valid enum type" })];
+                    }
                 }
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
                 user = {
                     firstname: firstname,
                     lastname: lastname,
                     email: email,
                     status: status,
+                    gradeLevel: gradeLevel
                 };
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, (0, service_1.update)(Id, user)];
             case 2:
                 updatedUser = _b.sent();
                 if (!updatedUser) {
                     return [2 /*return*/, res.status(404).json({ message: 'User not found' })];
                 }
+                console.log(updatedUser);
                 return [2 /*return*/, res.status(201).json({ message: 'user updated', data: updatedUser })];
             case 3:
                 error_1 = _b.sent();

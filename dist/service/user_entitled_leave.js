@@ -48,7 +48,8 @@ var createEntitledUserLeave = function (currentYear, user, numberOfDays) { retur
                 userEntitled = entitledLeaveRepo.create({
                     currentYear: new Date().getFullYear(),
                     numberOfDays: numberOfDays,
-                    user: user
+                    user: user,
+                    gradeLevel: user.gradeLevel
                 });
                 return [4 /*yield*/, entitledLeaveRepo.save(userEntitled)];
             case 1:
@@ -102,13 +103,14 @@ var getOneByUser = function (user) { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 exports.getOneByUser = getOneByUser;
-var updateEntitledUserLeave = function (Id, updatedNumberOfDays, updatedYear) { return __awaiter(void 0, void 0, void 0, function () {
+var updateEntitledUserLeave = function (Id, updatedNumberOfDays, gradedlevel, updatedYear) { return __awaiter(void 0, void 0, void 0, function () {
     var entitled;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, entitledLeaveRepo.update(Id, {
                     numberOfDays: updatedNumberOfDays,
                     currentYear: updatedYear,
+                    gradeLevel: gradedlevel
                 })];
             case 1:
                 entitled = _a.sent();

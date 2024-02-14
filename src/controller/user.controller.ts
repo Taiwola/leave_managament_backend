@@ -51,32 +51,32 @@ export const updateUser = async (req: Request, res: Response) => {
   if (!validUuid){
     return res.status(400).send({error:"Invalid Id"});
 }
-  const {firstname, lastname, email, status}:Partial<UserDetails> = req.body;
+  const {firstname, lastname, email, status, gradeLevel}:Partial<UserDetails> = req.body;
 
   const enumValues = Object.values(UserStatus);
 
-  if (!enumValues.includes(status)) {
-      return res.status(406).json({ message: "not a valid enum type" });
+  if (status) {
+    if (!enumValues.includes(status)) {
+      console.log("here")
+        return res.status(406).json({ message: "not a valid enum type" });
+    }
   }
+ 
 
-  // const emailExist = await getUserEmail(email);
-
-  // if (emailExist) {
-  //   return res.status(409).json({message:'This Email already exist'})
-  // }
-
-  const user: Partial<UserDetails> = {
-    firstname,
-    lastname,
-    email,
-    status,
-  };
 
   try {
+    const user: Partial<UserDetails> = {
+      firstname,
+      lastname,
+      email,
+      status,
+      gradeLevel
+    };
     const updatedUser = await update(Id, user);
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
       }
+      console.log(updatedUser);
     return res.status(201).json({message: 'user updated', data: updatedUser});
   } catch (error) {
     console.log('update error', error);

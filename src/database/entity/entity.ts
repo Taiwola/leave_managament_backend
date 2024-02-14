@@ -146,6 +146,9 @@ export class User_Entitled_Leave {
     @Column({type: "int", nullable: false})
     currentYear: number
 
+    @Column({type: "int", nullable: true})
+    gradeLevel: number
+
     @Column({type: "int", nullable: false})
     numberOfDays: number
 
